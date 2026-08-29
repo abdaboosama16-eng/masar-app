@@ -1,0 +1,6 @@
+{
+  "name": "منظومة نور البيان 2.0",
+  "description": "منظومة مسار — منصة تعليمية وإدارية متكاملة للمراكز التعليمية ورياض الأطفال",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
