@@ -6,6 +6,8 @@ import { AutoAuditor } from './AutoAuditor';
 import { ExpenseFlowchart } from './ExpenseFlowchart';
 import DailyClosingModal from './DailyClosingModal';
 import { syncService } from '../lib/syncService';
+import { Modal } from './ui/Modal';
+import { Input } from './ui/Input';
 
 interface FinancialsPageProps {
   currentAcademicYear?: string;
@@ -173,27 +175,15 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
           <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
             الصادرات والواردات (الخزينة)
           </h1>
-          <div className="flex flex-wrap items-center gap-2 mt-1">
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70">
-              السنة الدراسية: {activeYear}
-            </span>
-            <span className="text-xs text-slate-500 font-medium">
-              (الحركات الأساسية دائمة وتتجاوز فلتر السنة)
-            </span>
-          </div>
+          <p className="text-xs text-slate-500 mt-1 font-medium">
+            سجل العمليات المالية والمقبوضات والمصروفات المعتمدة
+          </p>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 w-full sm:w-auto">
-          <button 
-            onClick={() => setShowDailyClosingModal(true)}
-            className="flex-1 sm:flex-none justify-center bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 transition-all font-bold active:scale-[0.98] text-xs shadow-md shadow-green-600/10"
-          >
-            <ShieldCheck size={16} />
-            <span>جرد اليوم (إقفال الخزينة)</span>
-          </button>
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <button 
             onClick={() => setShowAddModal(true)}
-            className="flex-1 sm:flex-none justify-center bg-indigo-950 hover:bg-indigo-900 text-white px-5 py-3 rounded-2xl flex items-center gap-2 transition-all font-bold active:scale-[0.98] text-xs shadow-md shadow-indigo-950/10"
+            className="w-full sm:w-auto justify-center bg-indigo-950 hover:bg-indigo-900 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all font-bold active:scale-[0.98] text-xs shadow-md shadow-indigo-950/10 cursor-pointer"
           >
             <Plus size={16} className="text-amber-400" />
             <span>حركة مالية جديدة</span>
@@ -243,7 +233,7 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
               <span>إجمالي الواردات والمصروفات الشهرية</span>
             </h2>
             <p className="text-xs text-slate-500 mt-1 font-medium">
-              مخطط بياني لتوزيع حركة التحصيل المالي والمصروفات للعام الدراسي ({activeYear})
+              مخطط بياني لتوزيع حركة التحصيل المالي والمصروفات الشهرية
             </p>
           </div>
 
@@ -346,18 +336,41 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
         <div className="overflow-x-auto">
           <table className="w-full text-start border-collapse">
             <thead>
-              <tr className="bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
-                <th className="px-5 py-4 text-start font-bold">نوع الحركة</th>
-                <th className="px-5 py-4 text-start font-bold">الاتجاه</th>
-                <th className="px-5 py-4 text-start font-bold">البيان / التفاصيل</th>
-                <th className="px-5 py-4 text-start font-bold">المبلغ</th>
-                <th className="px-5 py-4 text-start font-bold">التاريخ</th>
-                <th className="px-5 py-4 text-start font-bold">السنة الدراسية</th>
+              <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                <th className="py-3 px-4 text-start font-bold">نوع الحركة</th>
+                <th className="py-3 px-4 text-start font-bold">الاتجاه</th>
+                <th className="py-3 px-4 text-start font-bold">البيان / التفاصيل</th>
+                <th className="py-3 px-4 text-start font-bold">المبلغ</th>
+                <th className="py-3 px-4 text-start font-bold">التاريخ</th>
+                <th className="py-3 px-4 text-start font-bold">السنة الدراسية</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 text-sm font-medium text-slate-800">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-sm font-medium text-slate-800 dark:text-slate-200">
               {loading ? (
-                <tr><td colSpan={6} className="px-5 py-10 text-center text-slate-500 font-semibold">جاري تحميل البيانات...</td></tr>
+                <>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="py-3 px-4">
+                        <div className="h-5 w-20 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-5 w-16 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-44 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                    </tr>
+                  ))}
+                </>
               ) : displayedTransactions.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center">
@@ -374,16 +387,16 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
                 displayedTransactions.map(tx => {
                   const isBasic = tx.category_type === 'basic' || tx.category_type === 'حركة أساسية';
                   return (
-                    <tr key={tx.id} className="hover:bg-slate-50 transition-colors duration-150">
+                    <tr key={tx.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors duration-150">
                       {/* Movement Type Badge */}
-                      <td className="px-5 py-4 text-start whitespace-nowrap">
+                      <td className="py-3 px-4 text-start whitespace-nowrap">
                         {isBasic ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60">
                             <Landmark size={12} />
                             حركة أساسية
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                             <Calendar size={12} />
                             حركة يومية
                           </span>
@@ -391,24 +404,24 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
                       </td>
 
                       {/* Direction: IN/OUT */}
-                      <td className="px-5 py-4 text-start whitespace-nowrap">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-bold ${tx.type === 'IN' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                      <td className="py-3 px-4 text-start whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-bold ${tx.type === 'IN' ? 'bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800/60' : 'bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800/60'}`}>
                           {tx.type === 'IN' ? <ArrowUpRight size={13}/> : <ArrowDownRight size={13}/>}
                           {tx.type === 'IN' ? 'وارد (+)' : 'صادر (-)'}
                         </span>
                       </td>
 
                       {/* Description */}
-                      <td className="px-5 py-4 text-start font-bold text-slate-900 min-w-[200px]">
+                      <td className="py-3 px-4 text-start font-bold text-slate-900 dark:text-white min-w-[200px]">
                         <div className="flex items-center gap-2">
                           <span>{tx.description}</span>
                           {tx.sync_status === 'pending' ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700 font-bold border border-amber-200" title="محفوظ محلياً - بانتظار المزامنة">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-800/60" title="محفوظ محلياً - بانتظار المزامنة">
                               <Clock size={10} />
                               <span>معلق</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-bold border border-green-100" title="متزامن">
+                            <span className="inline-flex items-center text-[10px] text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/60 px-2 py-0.5 rounded-full font-bold border border-green-100 dark:border-green-800/60" title="متزامن">
                               <CheckCircle2 size={12} className="ms-0.5" />
                               <span>متزامن</span>
                             </span>
@@ -417,19 +430,19 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
                       </td>
 
                       {/* Amount */}
-                      <td className={`px-5 py-4 text-start font-extrabold whitespace-nowrap text-sm ${tx.type === 'IN' ? 'text-green-600' : 'text-red-600'}`}>
+                      <td className={`py-3 px-4 text-start font-extrabold whitespace-nowrap text-sm ${tx.type === 'IN' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                         <span dir="ltr">{tx.type === 'IN' ? '+' : '-'} {Number(tx.amount || 0).toLocaleString()} د.ل</span>
                       </td>
 
                       {/* Date */}
-                      <td className="px-5 py-4 text-start text-slate-500 text-xs whitespace-nowrap font-medium">
+                      <td className="py-3 px-4 text-start text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap font-medium">
                         {tx.date}
                       </td>
 
                       {/* Academic Year */}
-                      <td className="px-5 py-4 text-start text-slate-500 text-xs whitespace-nowrap font-medium">
+                      <td className="py-3 px-4 text-start text-slate-500 dark:text-slate-400 text-xs whitespace-nowrap font-medium">
                         {isBasic ? (
-                          <span className="text-indigo-600 font-bold">ثابت (دائم)</span>
+                          <span className="text-indigo-600 dark:text-indigo-400 font-bold">ثابت (دائم)</span>
                         ) : (
                           <span>{tx.academic_year || activeYear}</span>
                         )}
@@ -497,171 +510,164 @@ function AddTransactionModal({ activeYear, onClose, onAdded }: { activeYear: str
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-      <div className="bg-white border border-slate-100 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/70">
-          <div>
-            <h2 className="font-extrabold text-base text-slate-900">إضافة حركة مالية للخزينة</h2>
-            <p className="text-[11px] text-slate-500 font-medium">تسجيل إيرادات أو مصروفات مع تحديد نوع الحركة</p>
-          </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 text-lg font-bold">
-            ×
-          </button>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      maxWidth="md"
+      title={
+        <div>
+          <h2 className="font-extrabold text-base text-slate-900 dark:text-slate-100">إضافة حركة مالية للخزينة</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">تسجيل إيرادات أو مصروفات مع تحديد نوع الحركة</p>
         </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          
-          {/* 1. Category Type (نوع الحركة: حركة أساسية vs حركة يومية) */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              نوع الحركة في الخزينة <span className="text-red-500">*</span>
-            </label>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button 
-                type="button" 
-                onClick={() => setFormData({...formData, category_type: 'daily'})}
-                className={`py-2.5 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1 transition-all ${formData.category_type === 'daily' ? 'bg-green-50 border-green-500 text-green-800 shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
-              >
-                <div className="flex items-center gap-1.5 font-black">
-                  <Calendar size={14} />
-                  <span>حركة يومية</span>
-                </div>
-                <span className="text-[10px] text-slate-500 font-normal">أقساط ومصروفات السنة</span>
-              </button>
-
-              <button 
-                type="button" 
-                onClick={() => setFormData({...formData, category_type: 'basic'})}
-                className={`py-2.5 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1 transition-all ${formData.category_type === 'basic' ? 'bg-indigo-50 border-indigo-500 text-indigo-800 shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
-              >
-                <div className="flex items-center gap-1.5 font-black">
-                  <Landmark size={14} />
-                  <span>حركة أساسية</span>
-                </div>
-                <span className="text-[10px] text-slate-500 font-normal">رأس مال وأرصدة ثابتة</span>
-              </button>
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1.5 font-medium">
-              {formData.category_type === 'basic' 
-                ? 'ℹ️ الحركة الأساسية تظل مرئية دائماً في الخزينة مهما تغيرت السنة الدراسية.'
-                : `ℹ️ الحركة اليومية تتبع السنة الدراسية المحددة (${activeYear}).`}
-            </p>
-          </div>
-
-          {/* 2. Direction: IN/OUT */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">طبيعة العملية</label>
-            <div className="flex gap-2">
-              <button 
-                type="button" 
-                onClick={() => setFormData({...formData, type: 'IN'})} 
-                className={`flex-1 py-2.5 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${formData.type === 'IN' ? 'bg-green-50 border-green-500 text-green-800 shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
-              >
-                <ArrowUpRight size={15} />
-                <span>وارد إلى الخزينة (+)</span>
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setFormData({...formData, type: 'OUT'})} 
-                className={`flex-1 py-2.5 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${formData.type === 'OUT' ? 'bg-red-50 border-red-500 text-red-800 shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
-              >
-                <ArrowDownRight size={15} />
-                <span>صادر من الخزينة (-)</span>
-              </button>
-            </div>
-          </div>
-
-          {/* 3. Amount */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">المبلغ (د.ل) <span className="text-red-500">*</span></label>
-            <input 
-              required 
-              type="number" 
-              placeholder="مثال: 1500"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 outline-none focus:border-indigo-600 focus:bg-white transition-all font-bold text-sm" 
-              value={formData.amount} 
-              onChange={e => setFormData({...formData, amount: e.target.value})} 
-            />
-          </div>
-
-          {/* 4. Description */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">البيان / التفاصيل <span className="text-red-500">*</span></label>
-            <input 
-              required 
-              type="text" 
-              placeholder="مثال: إيداع رأس مال افتتاحي / شراء مستلزمات..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 outline-none focus:border-indigo-600 focus:bg-white transition-all text-xs font-medium" 
-              value={formData.description} 
-              onChange={e => setFormData({...formData, description: e.target.value})} 
-            />
-          </div>
-
-          {/* 5. Native Camera capture for Invoices / Receipts */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-bold text-slate-700">إرفاق إيصال / فاتورة (اختياري)</label>
-              <div className="flex items-center gap-2">
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  capture="environment" 
-                  className="hidden" 
-                  id="txCameraInput" 
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setFormData(prev => ({ ...prev, attachment: reader.result as string }));
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                />
-                <label 
-                  htmlFor="txCameraInput" 
-                  className="cursor-pointer inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all active:scale-[0.98]"
-                  title="فتح كاميرا الهاتف لالتقاط صورة الفاتورة"
-                >
-                  <span>فتح الكاميرا</span>
-                </label>
-              </div>
-            </div>
-            {formData.attachment && (
-              <div className="relative mt-2 p-2.5 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <img src={formData.attachment} alt="المستند المرفق" className="w-10 h-10 object-cover rounded-xl border border-slate-200" />
-                  <span className="text-xs text-green-700 font-bold">تم إرفاق صورة الفاتورة</span>
-                </div>
-                <button 
-                  type="button" 
-                  onClick={() => setFormData(prev => ({ ...prev, attachment: '' }))}
-                  className="text-xs text-red-600 hover:text-red-700 font-bold px-2 py-1"
-                >
-                  إزالة
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="flex gap-3 pt-4 border-t border-slate-100">
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4" dir="rtl">
+        {/* 1. Category Type */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+            نوع الحركة في الخزينة <span className="text-rose-500">*</span>
+          </label>
+          <div className="grid grid-cols-2 gap-2.5">
             <button 
               type="button" 
-              onClick={onClose} 
-              className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-2xl font-bold text-xs transition-colors"
+              onClick={() => setFormData({...formData, category_type: 'daily'})}
+              className={`py-2.5 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1 transition-all ${formData.category_type === 'daily' ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 shadow-xs' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}
             >
-              إلغاء
+              <div className="flex items-center gap-1.5 font-bold">
+                <Calendar size={14} />
+                <span>حركة يومية</span>
+              </div>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">أقساط ومصروفات السنة</span>
             </button>
+
             <button 
-              type="submit" 
-              disabled={loading} 
-              className="flex-[2] bg-indigo-950 hover:bg-indigo-900 text-white py-3 rounded-2xl font-bold text-xs transition-all shadow-md active:scale-[0.98]"
+              type="button" 
+              onClick={() => setFormData({...formData, category_type: 'basic'})}
+              className={`py-2.5 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1 transition-all ${formData.category_type === 'basic' ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500 text-indigo-800 dark:text-indigo-300 shadow-xs' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}
             >
-              {loading ? 'جاري الحفظ...' : 'تأكيد الحفظ'}
+              <div className="flex items-center gap-1.5 font-bold">
+                <Landmark size={14} />
+                <span>حركة أساسية</span>
+              </div>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">رأس مال وأرصدة ثابتة</span>
             </button>
           </div>
-        </form>
-      </div>
-    </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 font-medium">
+            {formData.category_type === 'basic' 
+              ? 'الحركة الأساسية تظل مرئية دائماً في الخزينة مهما تغيرت السنة الدراسية.'
+              : `الحركة اليومية تتبع السنة الدراسية المحددة (${activeYear}).`}
+          </p>
+        </div>
+
+        {/* 2. Direction: IN/OUT */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">طبيعة العملية</label>
+          <div className="flex gap-2">
+            <button 
+              type="button" 
+              onClick={() => setFormData({...formData, type: 'IN'})} 
+              className={`flex-1 py-2.5 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${formData.type === 'IN' ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 shadow-xs' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'}`}
+            >
+              <ArrowUpRight size={15} />
+              <span>وارد إلى الخزينة (+)</span>
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setFormData({...formData, type: 'OUT'})} 
+              className={`flex-1 py-2.5 rounded-2xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${formData.type === 'OUT' ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-800 dark:text-rose-300 shadow-xs' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'}`}
+            >
+              <ArrowDownRight size={15} />
+              <span>صادر من الخزينة (-)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 3. Amount */}
+        <Input
+          required
+          type="number"
+          label="المبلغ (د.ل)"
+          placeholder="مثال: 1500"
+          value={formData.amount}
+          onChange={e => setFormData({...formData, amount: e.target.value})}
+          className="font-bold text-sm"
+        />
+
+        {/* 4. Description */}
+        <Input
+          required
+          type="text"
+          label="البيان / التفاصيل"
+          placeholder="مثال: إيداع رأس مال افتتاحي / شراء مستلزمات..."
+          value={formData.description}
+          onChange={e => setFormData({...formData, description: e.target.value})}
+        />
+
+        {/* 5. Native Camera capture for Invoices / Receipts */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">إرفاق إيصال / فاتورة (اختياري)</label>
+            <div className="flex items-center gap-2">
+              <input 
+                type="file" 
+                accept="image/*" 
+                capture="environment" 
+                className="hidden" 
+                id="txCameraInput" 
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setFormData(prev => ({ ...prev, attachment: reader.result as string }));
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+              <label 
+                htmlFor="txCameraInput" 
+                className="cursor-pointer inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all active:scale-[0.98]"
+                title="فتح كاميرا الهاتف لالتقاط صورة الفاتورة"
+              >
+                <span>فتح الكاميرا</span>
+              </label>
+            </div>
+          </div>
+          {formData.attachment && (
+            <div className="relative mt-2 p-2.5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <img src={formData.attachment} alt="المستند المرفق" className="w-10 h-10 object-cover rounded-xl border border-slate-200 dark:border-slate-700" />
+                <span className="text-xs text-emerald-700 dark:text-emerald-300 font-bold">تم إرفاق صورة الفاتورة</span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setFormData(prev => ({ ...prev, attachment: '' }))}
+                className="text-xs text-rose-600 hover:text-rose-700 font-bold px-2 py-1"
+              >
+                إزالة
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-white/5">
+          <button 
+            type="button" 
+            onClick={onClose} 
+            className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-3 rounded-2xl font-bold text-xs transition-colors"
+          >
+            إلغاء
+          </button>
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="flex-[2] bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white py-3 rounded-2xl font-bold text-xs transition-all shadow-md active:scale-[0.98]"
+          >
+            {loading ? 'جاري الحفظ...' : 'تأكيد الحفظ'}
+          </button>
+        </div>
+      </form>
+    </Modal>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, LayoutDashboard, Users, UserSquare2, Wallet, Settings, Building2, UserPlus, Receipt, X } from 'lucide-react';
+import { Search, LayoutDashboard, Users, UserSquare2, Wallet, Settings, Building2, UserPlus, Receipt, X, BusFront } from 'lucide-react';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -30,8 +30,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
   if (!isOpen) return null;
 
   const commands = [
-    { id: 'nav-dashboard', type: 'navigation', title: 'الرئيسية (Dashboard)', icon: LayoutDashboard, action: () => onNavigate('dashboard') },
+    { id: 'nav-dashboard', type: 'navigation', title: 'لوحة التحكم', icon: LayoutDashboard, action: () => onNavigate('dashboard') },
     { id: 'nav-students', type: 'navigation', title: 'الطلاب والأقساط', icon: Users, action: () => onNavigate('students') },
+    { id: 'nav-transport', type: 'navigation', title: 'خدمة المواصلات والنقل', icon: BusFront, action: () => onNavigate('transport') },
     { id: 'nav-financials', type: 'navigation', title: 'الخزينة والمصروفات', icon: Wallet, action: () => onNavigate('financials') },
     { id: 'nav-teachers', type: 'navigation', title: 'المعلمين والموظفين', icon: UserSquare2, action: () => onNavigate('teachers') },
     { id: 'nav-settings', type: 'navigation', title: 'الإعدادات العامة', icon: Settings, action: () => onAction('settings') },
@@ -115,13 +116,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
           )}
         </div>
         
-        {/* Footer */}
-        <div className="bg-slate-50 dark:bg-slate-800/50 px-4 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-[10px] font-bold text-slate-500 dark:text-slate-400">
-            <span className="flex items-center gap-1.5"><kbd className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 shadow-sm font-mono text-[9px]">Enter</kbd> للاختيار</span>
-            <span className="flex items-center gap-1.5"><kbd className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 shadow-sm font-mono text-[9px]">Esc</kbd> للإغلاق</span>
-          </div>
-        </div>
+        {/* Modal Content */}
       </div>
     </div>
   );

@@ -19,6 +19,10 @@ export interface Student {
   academic_year?: string;
   total_paid?: number;
   birth_certificate?: string;
+  hasTransport?: boolean;
+  has_transport?: boolean | number;
+  transportLandmark?: string;
+  transport_landmark?: string;
   created_at?: string;
   sync_status?: SyncStatus;
 }

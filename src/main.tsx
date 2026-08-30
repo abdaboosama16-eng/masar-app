@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { LanguageProvider } from './i18n.tsx';
+import { ToastProvider } from './components/Toast.tsx';
 
 // Register PWA Service Worker for Offline-First capability
 if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
@@ -21,7 +22,10 @@ if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LanguageProvider>
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </LanguageProvider>
   </StrictMode>,
 );
+

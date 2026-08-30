@@ -55,6 +55,8 @@ function setupTables(database: DatabaseSync) {
       { name: 'grade', type: 'TEXT DEFAULT \'\'' },
       { name: 'total_paid', type: 'REAL DEFAULT 0' },
       { name: 'birth_certificate', type: 'TEXT DEFAULT \'\'' },
+      { name: 'has_transport', type: 'INTEGER DEFAULT 0' },
+      { name: 'transport_landmark', type: 'TEXT DEFAULT \'\'' },
       { name: 'created_at', type: 'TEXT DEFAULT \'\'' },
       { name: 'academic_year_id', type: 'INTEGER DEFAULT 1' }
     ];
@@ -279,6 +281,10 @@ app.post('/api/students', async (req, res) => {
       final_fees, 
       total_paid, 
       birth_certificate, 
+      hasTransport,
+      has_transport,
+      transportLandmark,
+      transport_landmark,
       created_at, 
       academic_year_id 
     } = req.body;
@@ -291,6 +297,8 @@ app.post('/api/students', async (req, res) => {
     const discountAmount = Number(discount ?? 0);
     const paidAmount = Number(total_paid ?? 0);
     const todayDate = created_at || new Date().toISOString().split('T')[0];
+    const transportVal = (hasTransport !== undefined ? hasTransport : has_transport) ? 1 : 0;
+    const landmarkVal = (transportLandmark !== undefined ? transportLandmark : transport_landmark) || '';
 
     let studentId: number;
 
@@ -300,8 +308,8 @@ app.post('/api/students', async (req, res) => {
         `INSERT OR REPLACE INTO students (
           id, name, father_phone, mother_phone, national_id, gender, birth_date, 
           period, grade, base_fees, discount, final_fees, total_paid, birth_certificate, 
-          created_at, academic_year_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          has_transport, transport_landmark, created_at, academic_year_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           id,
           name || '',
@@ -317,6 +325,8 @@ app.post('/api/students', async (req, res) => {
           feeAmount,
           paidAmount,
           birth_certificate || '',
+          transportVal,
+          landmarkVal,
           todayDate,
           academic_year_id || 1
         ]
@@ -328,8 +338,8 @@ app.post('/api/students', async (req, res) => {
         `INSERT INTO students (
           name, father_phone, mother_phone, national_id, gender, birth_date, 
           period, grade, base_fees, discount, final_fees, total_paid, birth_certificate, 
-          created_at, academic_year_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          has_transport, transport_landmark, created_at, academic_year_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           name || '',
           father_phone || '',
@@ -344,6 +354,8 @@ app.post('/api/students', async (req, res) => {
           feeAmount,
           paidAmount,
           birth_certificate || '',
+          transportVal,
+          landmarkVal,
           todayDate,
           academic_year_id || 1
         ]
@@ -383,19 +395,26 @@ app.put('/api/students/:id', async (req, res) => {
       discount, 
       final_fees, 
       total_paid, 
-      birth_certificate 
+      birth_certificate,
+      hasTransport,
+      has_transport,
+      transportLandmark,
+      transport_landmark
     } = req.body;
 
     const feeAmount = Number(final_fees ?? base_fees ?? 1400);
     const discountAmount = Number(discount ?? 0);
     const paidAmount = total_paid !== undefined ? Number(total_paid) : null;
+    const transportVal = (hasTransport !== undefined ? hasTransport : has_transport) ? 1 : 0;
+    const landmarkVal = (transportLandmark !== undefined ? transportLandmark : transport_landmark) || '';
 
     if (paidAmount !== null) {
       await runQuery(
         `UPDATE students 
          SET name = ?, father_phone = ?, mother_phone = ?, national_id = ?, gender = ?, 
              birth_date = ?, period = ?, grade = ?, base_fees = ?, discount = ?, final_fees = ?, 
-             total_paid = ?, birth_certificate = COALESCE(?, birth_certificate)
+             total_paid = ?, birth_certificate = COALESCE(?, birth_certificate),
+             has_transport = ?, transport_landmark = ?
          WHERE id = ?`,
         [
           name || '', 
@@ -411,6 +430,8 @@ app.put('/api/students/:id', async (req, res) => {
           feeAmount, 
           paidAmount, 
           birth_certificate, 
+          transportVal,
+          landmarkVal,
           studentId
         ]
       );
@@ -419,7 +440,8 @@ app.put('/api/students/:id', async (req, res) => {
         `UPDATE students 
          SET name = ?, father_phone = ?, mother_phone = ?, national_id = ?, gender = ?, 
              birth_date = ?, period = ?, grade = ?, base_fees = ?, discount = ?, final_fees = ?, 
-             birth_certificate = COALESCE(?, birth_certificate)
+             birth_certificate = COALESCE(?, birth_certificate),
+             has_transport = ?, transport_landmark = ?
          WHERE id = ?`,
         [
           name || '', 
@@ -434,6 +456,8 @@ app.put('/api/students/:id', async (req, res) => {
           discountAmount, 
           feeAmount, 
           birth_certificate, 
+          transportVal,
+          landmarkVal,
           studentId
         ]
       );

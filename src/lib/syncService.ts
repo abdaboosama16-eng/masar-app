@@ -217,6 +217,9 @@ class SyncService {
       const finalFees = Number(studentData.final_fees ?? studentData.base_fees ?? 1400);
       const initialPaid = Number(studentData.total_paid || 0);
 
+      const hasTransport = Boolean(studentData.hasTransport ?? (studentData as any)?.has_transport ?? false);
+      const transportLandmark = hasTransport ? (studentData.transportLandmark || (studentData as any)?.transport_landmark || '') : '';
+
       student = {
         id: newId,
         name: studentData.name || '',
@@ -232,6 +235,8 @@ class SyncService {
         final_fees: finalFees,
         total_paid: initialPaid,
         birth_certificate: studentData.birth_certificate,
+        hasTransport,
+        transportLandmark,
         created_at: todayDate,
         sync_status: initialStatus
       };
@@ -304,6 +309,9 @@ class SyncService {
       const finalFees = Number(raw.final_fees ?? raw.base_fees ?? 1400);
       const initialPaid = Number(raw.total_paid || 0);
 
+      const hasTransport = Boolean(raw.hasTransport ?? (raw as any)?.has_transport ?? false);
+      const transportLandmark = hasTransport ? (raw.transportLandmark || (raw as any)?.transport_landmark || '') : '';
+
       const student: Student = {
         id: studentId,
         name: raw.name.trim(),
@@ -319,6 +327,8 @@ class SyncService {
         final_fees: finalFees,
         total_paid: initialPaid,
         birth_certificate: raw.birth_certificate,
+        hasTransport,
+        transportLandmark,
         created_at: todayDate,
         sync_status: 'pending'
       };

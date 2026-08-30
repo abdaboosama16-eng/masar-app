@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { Search, UserPlus, Phone, CreditCard, MessageCircle, Wallet, Printer, Camera, Check, Receipt as ReceiptIcon, FileText, Trash2, AlertTriangle, Pencil, Sparkles, Users, ShieldCheck, Keyboard, ArrowUpDown, Clock, CheckCircle2, Calendar, Coins, FileSpreadsheet, MoreHorizontal } from 'lucide-react';
+import { Search, UserPlus, Phone, CreditCard, MessageCircle, Wallet, Printer, Camera, Check, Receipt as ReceiptIcon, FileText, Trash2, AlertTriangle, Pencil, Sparkles, Users, ShieldCheck, Keyboard, ArrowUpDown, Clock, CheckCircle2, Calendar, Coins, FileSpreadsheet, MoreHorizontal, BusFront, MapPin, Eye } from 'lucide-react';
 import { Student, Installment } from '../types';
 import { tafqeet } from '../lib/tafqeet';
 import { getWhatsAppReminderUrl } from '../lib/utils';
@@ -12,6 +12,30 @@ import { ImportStudentsModal } from './ImportStudentsModal';
 import { syncService } from '../lib/syncService';
 import { useSchoolSettings, DEFAULT_FEES, DEFAULT_ACADEMIC_YEARS } from '../lib/settings';
 import { getActiveSessionUser, hasPermission } from '../lib/auth';
+import { Modal } from './ui/Modal';
+import { Input, Select } from './ui/Input';
+
+function StudentBadge({ type, label }: { type: 'financial_delay' | 'excellent' | 'admin_note'; label: string }) {
+  if (type === 'financial_delay') {
+    return (
+      <span className="inline-flex items-center text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+        {label}
+      </span>
+    );
+  }
+  if (type === 'excellent') {
+    return (
+      <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+        {label}
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+      {label}
+    </span>
+  );
+}
 
 export default function StudentsPage() {
   const { settings } = useSchoolSettings();
@@ -30,6 +54,7 @@ export default function StudentsPage() {
   const [whatsAppModalStudent, setWhatsAppModalStudent] = useState<{ student: Student; remainingAmount?: number } | null>(null);
   const [showDailyClosingModal, setShowDailyClosingModal] = useState(false);
   const [showPhoneExtractionModal, setShowPhoneExtractionModal] = useState(false);
+  const [phoneExtractionFilter, setPhoneExtractionFilter] = useState<'all' | 'transport'>('transport');
   const [showImportModal, setShowImportModal] = useState(false);
   const [sortBy, setSortBy] = useState<'latest' | 'name_asc' | 'name_desc'>('latest');
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
@@ -220,54 +245,36 @@ export default function StudentsPage() {
 
   return (
     <div className="space-y-7">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      {/* Header & Main Actions */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <span>إدارة الطلاب والأقساط</span>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            إدارة الطلاب والأقساط
           </h1>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 w-full lg:w-auto">
-          {/* Import Students Data Button */}
+        {/* 3 Vibrant Primary/Secondary Action Buttons */}
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          {/* Button 1: استخراج هواتف المواصلات (Emerald Green) */}
           <button 
-            onClick={() => setShowImportModal(true)}
-            className="flex-1 sm:flex-none justify-center bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/80 px-4 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm active:scale-[0.98] cursor-pointer"
-            title="استيراد بيانات الطلاب من ملف إكسل أو CSV"
+            type="button"
+            onClick={() => {
+              setPhoneExtractionFilter('transport');
+              setShowPhoneExtractionModal(true);
+            }}
+            className="flex-1 sm:flex-none justify-center bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all font-bold text-xs shadow-md shadow-emerald-500/20 active:scale-[0.98] cursor-pointer"
+            title="استخراج وطباعة أرقام هواتف المشتركين في خدمة المواصلات"
           >
-            <FileSpreadsheet size={16} className="text-teal-600" />
-            <span>استيراد بيانات الطلاب (Excel/CSV)</span>
+            <BusFront size={16} />
+            <span>استخراج هواتف المواصلات</span>
           </button>
 
-          {/* Daily Closing Button */}
+          {/* Button 2: طباعة واصل مالي (Indigo) */}
           <button 
-            onClick={() => setShowDailyClosingModal(true)}
-            className="flex-1 sm:flex-none justify-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm shadow-emerald-600/10 active:scale-[0.98]"
-          >
-            <ShieldCheck size={16} />
-            <span>جرد اليوم (إقفال الخزينة)</span>
-          </button>
-
-          {/* Extract Phone Numbers Button */}
-          <button 
-            onClick={() => setShowPhoneExtractionModal(true)}
-            className="flex-1 sm:flex-none justify-center bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm shadow-cyan-600/10 active:scale-[0.98]"
-          >
-            <Phone size={16} />
-            <span>استخراج الهواتف</span>
-          </button>
-
-          <button 
-            onClick={() => setShowBulkWhatsApp(true)}
-            className="flex-1 sm:flex-none justify-center bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 px-4 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm active:scale-[0.98]"
-          >
-            <MessageCircle size={16} className="text-emerald-600" />
-            <span>إشعارات واتساب</span>
-          </button>
-
-          <button 
+            type="button"
             onClick={() => {
               if (!selectedStudentId) {
-                setAlertMessage({ title: "تنبيه", message: "الرجاء تحديد طالب من الجدول لطباعة الواصل المالي", type: "error" });
+                setAlertMessage({ title: "تنبيه", message: "الرجاء تحديد طالب من الجدول أولاً لطباعة الواصل المالي", type: "error" });
                 return;
               }
               const s = safeStudents.find(st => st.id === selectedStudentId);
@@ -275,86 +282,111 @@ export default function StudentsPage() {
                 handlePrintReceipt(s, s.total_paid || 0, s.final_fees - (s.total_paid || 0));
               }
             }}
-            className="flex-1 sm:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm shadow-blue-600/10 active:scale-[0.98]"
+            className="flex-1 sm:flex-none justify-center bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all font-bold text-xs shadow-md shadow-indigo-500/20 active:scale-[0.98] cursor-pointer"
+            title="طباعة واصل مالي للطالب المحدد"
           >
             <ReceiptIcon size={16} />
             <span>طباعة واصل مالي</span>
           </button>
 
+          {/* Button 3: طالب جديد (Primary Blue) */}
           <button 
+            type="button"
             onClick={() => {
               setStudentToEdit(null);
               setShowAddModal(true);
             }}
-            className="flex-1 sm:flex-none justify-center bg-indigo-950 hover:bg-indigo-900 text-white px-5 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm shadow-indigo-950/10 active:scale-[0.98]"
+            className="flex-1 sm:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all font-bold text-xs shadow-md shadow-blue-600/25 active:scale-[0.98] cursor-pointer"
           >
-            <UserPlus size={16} className="text-amber-400" />
+            <UserPlus size={16} />
             <span>طالب جديد</span>
           </button>
-          
-          {settings.subscriptionPlan === 'enterprise' && (
-            <button 
-              onClick={() => {
-                setAlertMessage({ title: "ميزة إنتربرايز", message: "سيتم فتح واجهة الاستيراد الذكي عبر الكاميرا قريباً...", type: "success" });
-              }}
-              className="flex-1 sm:flex-none justify-center bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-50 px-5 py-3 rounded-lg flex items-center gap-2 transition-all font-bold text-xs shadow-sm active:scale-[0.98]"
-            >
-              <Camera size={16} className="text-indigo-500" />
-              <span>استيراد ذكي (الكاميرا)</span>
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Search & Sort Actions */}
-      <div className="flex flex-col sm:flex-row items-center gap-4">
+      {/* Search & Sort Actions Bar */}
+      <div className="flex flex-col sm:flex-row items-center gap-3">
         {/* Search Input */}
-        <div className="flex-1 w-full bg-white px-5 py-3.5 rounded-2xl border border-slate-200 flex items-center gap-3 shadow-sm transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
-          <Search size={18} className="text-slate-400 shrink-0" />
+        <div className="flex-1 w-full bg-white dark:bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 shadow-sm transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
+          <Search size={18} className="text-slate-400 dark:text-slate-500 shrink-0" />
           <input 
             type="text" 
             placeholder="ابحث بالاسم أو الرقم الوطني أو الهاتف..."
-            className="bg-transparent border-none outline-none w-full text-slate-900 placeholder:text-slate-400 font-bold text-xs sm:text-sm"
+            className="bg-transparent border-none outline-none w-full text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 font-bold text-xs sm:text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         {/* Sort Dropdown Selector */}
-        <div className="w-full sm:w-auto bg-white px-5 py-3.5 rounded-2xl border border-slate-200 flex items-center gap-2 shadow-sm shrink-0 hover:border-slate-300 transition-colors">
-          <ArrowUpDown size={16} className="text-slate-500 shrink-0" />
-          <span className="text-xs text-slate-500 font-bold whitespace-nowrap hidden md:inline">ترتيب:</span>
+        <div className="w-full sm:w-auto bg-white dark:bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-2 shadow-sm shrink-0 transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
+          <ArrowUpDown size={16} className="text-slate-500 dark:text-slate-400 shrink-0" />
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap hidden md:inline">ترتيب:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'latest' | 'name_asc' | 'name_desc')}
-            className="bg-transparent border-none outline-none text-slate-900 font-bold text-xs sm:text-sm cursor-pointer"
+            className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-bold text-xs sm:text-sm cursor-pointer"
           >
-            <option value="name_asc">الترتيب الأبجدي (أ - ي)</option>
-            <option value="name_desc">الترتيب الأبجدي (ي - أ)</option>
-            <option value="latest">الأحدث إضافة</option>
+            <option value="name_asc" className="dark:bg-slate-900">الترتيب الأبجدي (أ - ي)</option>
+            <option value="name_desc" className="dark:bg-slate-900">الترتيب الأبجدي (ي - أ)</option>
+            <option value="latest" className="dark:bg-slate-900">الأحدث إضافة</option>
           </select>
         </div>
       </div>
 
       {/* Students DataGrid Table */}
-      <div className="bg-white border border-slate-200 rounded-[20px] overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-start whitespace-nowrap border-collapse">
-            <thead className="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+            <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
               <tr>
-                <th className="px-5 py-4 font-bold text-start">اسم الطالب</th>
-                <th className="px-5 py-4 font-bold text-start">الصف</th>
-                <th className="px-5 py-4 font-bold text-start">الفترة</th>
-                <th className="px-5 py-4 font-bold text-start">هاتف الأب</th>
-                <th className="px-5 py-4 font-bold text-start">الإجمالي</th>
-                <th className="px-5 py-4 font-bold text-start">المدفوع</th>
-                <th className="px-5 py-4 font-bold text-start">المتبقي</th>
-                <th className="px-5 py-4 font-bold text-center">الإجراءات</th>
+                <th className="py-3 px-4 font-bold text-center w-12">م</th>
+                <th className="py-3 px-4 font-bold text-start">اسم الطالب</th>
+                <th className="py-3 px-4 font-bold text-start">الصف</th>
+                <th className="py-3 px-4 font-bold text-start">الفترة</th>
+                <th className="py-3 px-4 font-bold text-start">هاتف الأب</th>
+                <th className="py-3 px-4 font-bold text-start">الإجمالي</th>
+                <th className="py-3 px-4 font-bold text-start">المدفوع</th>
+                <th className="py-3 px-4 font-bold text-center">الإجراءات</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 text-sm font-medium">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-sm font-medium">
               {loading ? (
-                <tr><td colSpan={8} className="p-10 text-center text-slate-500 font-semibold">جاري تحميل بيانات الطلاب...</td></tr>
+                // Skeleton Rows Loader
+                <>
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="py-3 px-4 text-center">
+                        <div className="h-4 w-6 bg-gray-200 dark:bg-gray-800 rounded-lg mx-auto"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-36 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-24 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <div className="w-7 h-7 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                          <div className="w-7 h-7 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                          <div className="w-7 h-7 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </>
               ) : sortedAndFilteredStudents.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="p-12 text-center">
@@ -368,172 +400,100 @@ export default function StudentsPage() {
                   </td>
                 </tr>
               ) : (
-                sortedAndFilteredStudents.map(student => {
+                sortedAndFilteredStudents.map((student, index) => {
                   const remaining = student.final_fees - (student.total_paid || 0);
                   const isSelected = selectedStudentId === student.id;
+                  const isEven = index % 2 === 0;
+
                   return (
                     <tr 
                       key={student.id} 
                       onClick={() => setSelectedStudentId(student.id)}
-                      className={`cursor-pointer transition-colors duration-150 ${isSelected ? 'bg-blue-50 border-r-4 border-blue-600' : 'hover:bg-blue-50'}`}
+                      className={`cursor-pointer transition-colors duration-150 ${
+                        isSelected 
+                          ? 'bg-blue-50/90 dark:bg-blue-950/40 border-r-4 border-blue-600' 
+                          : isEven 
+                            ? 'bg-white dark:bg-slate-900 hover:bg-indigo-50/40 dark:hover:bg-slate-800/60' 
+                            : 'bg-gray-50/50 dark:bg-slate-900/50 hover:bg-indigo-50/40 dark:hover:bg-slate-800/60'
+                      }`}
                     >
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0 border border-indigo-200/50">
-                            {student.name.charAt(0)}
-                          </div>
-                          <span className="font-extrabold text-slate-900 text-sm">{student.name}</span>
-                          {remaining > 0 && remaining === student.final_fees && (
-                            <StudentBadge type="financial_delay" label="لم يسدد" />
-                          )}
-                          {remaining > 0 && remaining < student.final_fees && (
-                            <StudentBadge type="financial_delay" label="عليه قسط" />
-                          )}
-                          {remaining === 0 && student.final_fees > 0 && (
-                            <StudentBadge type="excellent" label="خالص" />
-                          )}
-                          {!student.father_phone && !student.mother_phone && (
-                            <StudentBadge type="admin_note" label="بيانات ناقصة" />
-                          )}
-                          {remaining > 0 && (
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openWhatsApp(student.father_phone, student, remaining);
-                              }}
-                              className="text-emerald-600 hover:text-emerald-700 p-1 hover:bg-emerald-50 rounded-lg transition-all inline-flex items-center cursor-pointer active:scale-95"
-                              title={`إرسال تذكير واتساب (${remaining} ${settings.currency || 'د.ل'})`}
-                            >
-                              <MessageCircle size={15} />
-                            </button>
-                          )}
-                          {student.sync_status === 'pending' ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700 font-bold border border-amber-200" title="محفوظ محلياً - بانتظار المزامنة">
-                              <Clock size={10} />
-                              <span>معلق</span>
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-100" title="متزامن">
-                              <CheckCircle2 size={12} className="ms-0.5" />
-                              <span>متزامن</span>
-                            </span>
-                          )}
-                        </div>
+                      {/* 1. م */}
+                      <td className="py-3 px-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 font-mono">
+                        {index + 1}
                       </td>
-                      <td className="px-5 py-4 text-slate-600 font-semibold">{student.grade || '-'}</td>
-                      <td className="px-5 py-4 text-slate-500 font-medium">{student.period || '-'}</td>
-                      <td className="px-5 py-4 text-slate-700 font-mono">{student.father_phone}</td>
-                      <td className="px-5 py-4 font-extrabold text-slate-800">{student.final_fees} <span className="text-[10px] font-bold text-slate-400">د.ل</span></td>
-                      <td className="px-5 py-4 font-extrabold text-emerald-600">{student.total_paid || 0} <span className="text-[10px] font-bold text-emerald-400">د.ل</span></td>
-                      <td className="px-5 py-4">
-                        {remaining > 0 ? (
-                          <div className="flex flex-col gap-1 items-start">
-                            <div className="font-extrabold text-red-600">{remaining} <span className="text-[10px] font-bold text-red-400">د.ل</span></div>
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-lg border border-red-200 whitespace-nowrap shadow-sm">
-                              متأخر
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col gap-1 items-start">
-                            <div className="font-extrabold text-slate-400">0 <span className="text-[10px] font-bold text-slate-300">د.ل</span></div>
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-lg border border-green-200 whitespace-nowrap shadow-sm">
-                              <CheckCircle2 size={10} className="text-green-600 shrink-0" />
-                              <span>خالص</span>
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-5 py-4">
-                        <div className="flex items-center justify-end gap-2 relative">
-                          {remaining > 0 && (
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openWhatsApp(student.father_phone, student, remaining);
-                              }}
-                              className="inline-flex items-center gap-1 bg-white hover:bg-slate-50 border border-slate-200 active:scale-[0.98] text-slate-700 px-2.5 py-1.5 rounded-lg font-bold text-xs shadow-sm transition-all cursor-pointer whitespace-nowrap"
-                              title="إرسال تذكير بالدفع عبر واتساب"
-                            >
-                              <MessageCircle size={14} className="text-emerald-600 shrink-0" />
-                              <span>تذكير</span>
-                            </button>
-                          )}
 
+                      {/* 2. اسم الطالب */}
+                      <td className="py-3 px-4 font-extrabold text-slate-900 dark:text-white text-sm">
+                        {student.name}
+                      </td>
+
+                      {/* 3. الصف */}
+                      <td className="py-3 px-4 text-slate-600 dark:text-slate-300 font-semibold text-xs">
+                        {student.grade || '-'}
+                      </td>
+
+                      {/* 4. الفترة */}
+                      <td className="py-3 px-4 text-slate-500 dark:text-slate-400 font-medium text-xs">
+                        {student.period || '-'}
+                      </td>
+
+                      {/* 5. هاتف الأب */}
+                      <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-mono text-xs">
+                        {student.father_phone || '-'}
+                      </td>
+
+                      {/* 6. الإجمالي */}
+                      <td className="py-3 px-4 font-extrabold text-slate-800 dark:text-slate-200 text-xs">
+                        {student.final_fees} <span className="text-[10px] font-bold text-slate-400">د.ل</span>
+                      </td>
+
+                      {/* 7. المدفوع */}
+                      <td className="py-3 px-4 font-extrabold text-emerald-600 dark:text-emerald-400 text-xs">
+                        {student.total_paid || 0} <span className="text-[10px] font-bold text-emerald-400">د.ل</span>
+                      </td>
+
+                      {/* 8. الإجراءات (أيقونات حية ومفرغة بألوان زاهية) */}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center justify-center gap-1.5">
+                          {/* أيقونة عرض (أزرق) */}
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setOpenDropdownId(openDropdownId === student.id ? null : student.id);
+                              setShowInstallmentModal(student);
                             }}
-                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                            className="p-1.5 text-blue-500 hover:text-blue-600 hover:bg-blue-50 border border-blue-100 rounded-lg transition-colors cursor-pointer shadow-xs"
+                            title="عرض التفاصيل والأقساط"
                           >
-                            <MoreHorizontal size={18} />
+                            <Eye size={16} />
                           </button>
 
-                          {openDropdownId === student.id && (
-                            <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-xl shadow-lg shadow-slate-200/50 z-50 overflow-hidden text-right animate-in fade-in slide-in-from-top-2">
-                              <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setOpenDropdownId(null);
-                                  setShowInstallmentModal(student);
-                                }}
-                                className="w-full text-start px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
-                              >
-                                <Wallet size={15} className="text-slate-400" />
-                                <span>الأقساط والدفعات</span>
-                              </button>
-                              <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setOpenDropdownId(null);
-                                  handlePrintReceipt(student, student.total_paid || 0, remaining);
-                                }}
-                                className="w-full text-start px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
-                              >
-                                <ReceiptIcon size={15} className="text-blue-500" />
-                                <span>طباعة واصل مالي</span>
-                              </button>
-                              <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setOpenDropdownId(null);
-                                  setStudentToEdit(student);
-                                  setShowAddModal(true);
-                                }}
-                                className="w-full text-start px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
-                              >
-                                <Pencil size={15} className="text-amber-500" />
-                                <span>تعديل بيانات الطالب</span>
-                              </button>
-                              {remaining > 0 && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setOpenDropdownId(null);
-                                    setWhatsAppModalStudent({ student, remainingAmount: remaining });
-                                  }}
-                                  className="w-full text-start px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors cursor-pointer"
-                                >
-                                  <MessageCircle size={15} className="text-emerald-500" />
-                                  <span>تخصيص رسالة واتساب</span>
-                                </button>
-                              )}
-                              {canDelete && (
-                                <button 
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setOpenDropdownId(null);
-                                    setStudentToDelete(student);
-                                  }}
-                                  className="w-full text-start px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 border-t border-slate-100 flex items-center gap-2 transition-colors cursor-pointer"
-                                >
-                                  <Trash2 size={15} />
-                                  <span>حذف الطالب</span>
-                                </button>
-                              )}
-                            </div>
-                          )}
+                          {/* أيقونة تعديل (برتقالي/كهرماني) */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setStudentToEdit(student);
+                              setShowAddModal(true);
+                            }}
+                            className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 border border-amber-100 rounded-lg transition-colors cursor-pointer shadow-xs"
+                            title="تعديل بيانات الطالب"
+                          >
+                            <Pencil size={16} />
+                          </button>
+
+                          {/* أيقونة واتساب (أخضر) */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openWhatsApp(student.father_phone, student, remaining);
+                            }}
+                            className="p-1.5 text-green-500 hover:text-green-600 hover:bg-green-50 border border-green-100 rounded-lg transition-colors cursor-pointer shadow-xs"
+                            title="إرسال رسالة واتساب"
+                          >
+                            <MessageCircle size={16} />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -618,6 +578,7 @@ export default function StudentsPage() {
       {showPhoneExtractionModal && (
         <PhoneExtractionModal 
           students={safeStudents} 
+          initialFilter={phoneExtractionFilter}
           onClose={() => setShowPhoneExtractionModal(false)} 
         />
       )}
@@ -714,7 +675,9 @@ function StudentFormModal({
     academic_year: initialAcademicYear,
     base_fees: initialBaseFee,
     initial_paid: studentToEdit ? String(studentToEdit.total_paid || '0') : '',
-    birth_certificate: studentToEdit?.birth_certificate || ''
+    birth_certificate: studentToEdit?.birth_certificate || '',
+    hasTransport: Boolean(studentToEdit?.hasTransport ?? (studentToEdit as any)?.has_transport ?? false),
+    transportLandmark: studentToEdit?.transportLandmark || (studentToEdit as any)?.transport_landmark || ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -954,7 +917,9 @@ function StudentFormModal({
           academic_year: formData.academic_year,
           base_fees: finalFees,
           final_fees: finalFees,
-          birth_certificate: formData.birth_certificate || studentToEdit.birth_certificate
+          birth_certificate: formData.birth_certificate || studentToEdit.birth_certificate,
+          hasTransport: formData.hasTransport,
+          transportLandmark: formData.hasTransport ? formData.transportLandmark.trim() : ''
         }, true, studentToEdit.id);
 
         onSaved(formData.name.trim(), true);
@@ -974,7 +939,9 @@ function StudentFormModal({
           discount: 0,
           final_fees: finalFees,
           total_paid: initialPaid,
-          birth_certificate: formData.birth_certificate
+          birth_certificate: formData.birth_certificate,
+          hasTransport: formData.hasTransport,
+          transportLandmark: formData.hasTransport ? formData.transportLandmark.trim() : ''
         };
 
         const saved = await syncService.saveStudent(newStudentData, false);
@@ -991,66 +958,40 @@ function StudentFormModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/80 dark:bg-slate-950/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+    <>
       {showScanner && (
         <DocumentScanner 
           onScanComplete={(data) => {
             setShowScanner(false);
             if (data.name) setFormData(prev => ({ ...prev, name: data.name! }));
-            // Add other fields if applicable
           }}
           onClose={() => setShowScanner(false)}
         />
       )}
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] w-full max-w-2xl overflow-hidden shadow-[0_0_35px_rgba(0,0,0,0.5)] flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-100 dark:bg-slate-900/60">
-          <div className="flex items-center gap-2.5">
-            {isEditMode ? (
-              <div className="p-2 bg-amber-500/20 text-amber-500 rounded-xl">
-                <Pencil size={20} />
-              </div>
-            ) : (
-              <div className="p-2 bg-lime-500/20 text-lime-600 dark:text-lime-400 rounded-xl">
-                <UserPlus size={20} />
-              </div>
-            )}
-            <div>
-              <h2 className="font-extrabold text-lg text-slate-900 dark:text-slate-100">
-                {isEditMode ? 'تعديل بيانات الطالب المسجل' : 'تسجيل طالب جديد'}
-              </h2>
-              {!isEditMode && (
-                <button
-                  type="button"
-                  onClick={() => setShowScanner(true)}
-                  className="mt-1 flex items-center gap-1 text-[11px] font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 bg-cyan-50 dark:bg-cyan-900/30 px-2 py-0.5 rounded-full transition-colors border border-cyan-100 dark:border-cyan-800"
-                >
-                  <Camera size={12} />
-                  مسح مستند (استيراد ذكي)
-                </button>
-              )}
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                دعم الإدخال الذكي من الرقم الوطني والتنقل بمفتاح Enter
-              </p>
+
+      <Modal
+        isOpen={true}
+        onClose={onClose}
+        maxWidth="2xl"
+        title={isEditMode ? 'تعديل بيانات الطالب المسجل' : 'تسجيل طالب جديد'}
+      >
+        <div className="space-y-4">
+          {!isEditMode && (
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setShowScanner(true)}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-cyan-400 hover:text-indigo-700 bg-indigo-50 dark:bg-cyan-950/40 px-3 py-1.5 rounded-xl transition-all border border-indigo-100 dark:border-cyan-800"
+              >
+                <Camera size={14} />
+                <span>مسح مستند (استيراد ذكي)</span>
+              </button>
             </div>
-          </div>
+          )}
 
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-1 rounded-md border border-slate-300 dark:border-slate-700">
-              <Keyboard size={12} />
-              <span>Ctrl+S للحفظ</span>
-            </span>
-            <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors text-2xl font-bold p-1 leading-none">
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
           {/* Sibling Toast */}
           {autoFillToast && (
-            <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-2">
               <Sparkles size={16} className="text-emerald-500 shrink-0" />
               <span>{autoFillToast}</span>
             </div>
@@ -1058,10 +999,10 @@ function StudentFormModal({
 
           {/* Sibling Auto-fill Suggestions Bar */}
           {!isEditMode && siblingSuggestions.length > 0 && (
-            <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 rounded-xl space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-blue-700 dark:text-blue-300">
-                <Users size={16} />
-                <span>اقتراح إخوة مسجلين مسبقاً (اضغط للتعبئة التلقائية لبيانات ولي الأمر):</span>
+            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 rounded-xl space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-300">
+                <Users size={15} />
+                <span>اقتراح إخوة مسجلين مسبقاً (اضغط للتعبئة التلقائية):</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {siblingSuggestions.map(sib => (
@@ -1082,27 +1023,27 @@ function StudentFormModal({
 
           {/* Smart Libyan National ID Parsing Badge */}
           {nationalIdInfo && (
-            <div className="p-3 bg-gradient-to-r from-lime-500/15 to-emerald-500/15 border border-lime-500/30 rounded-xl text-xs space-y-1.5 text-slate-800 dark:text-slate-200 animate-in fade-in">
-              <div className="flex items-center gap-2 font-bold text-lime-700 dark:text-lime-400">
-                <Sparkles size={16} />
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl text-xs space-y-1.5 text-slate-800 dark:text-slate-200">
+              <div className="flex items-center gap-2 font-bold text-emerald-700 dark:text-emerald-400">
+                <Sparkles size={15} />
                 <span>تم التعرف التلقائي على الرقم الوطني وتحديد بيانات الطالب:</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-medium text-[11px]">
-                <div className="bg-white/80 dark:bg-slate-900/80 p-1.5 rounded border border-lime-500/20 text-center">
+                <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-center">
                   <span className="text-slate-500 block text-[10px]">الجنس</span>
                   <strong className="text-slate-900 dark:text-slate-100">{nationalIdInfo.gender}</strong>
                 </div>
-                <div className="bg-white/80 dark:bg-slate-900/80 p-1.5 rounded border border-lime-500/20 text-center">
+                <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-center">
                   <span className="text-slate-500 block text-[10px]">المواليد والعمر</span>
                   <strong className="text-slate-900 dark:text-slate-100">{nationalIdInfo.year} ({nationalIdInfo.age} سنوات)</strong>
                 </div>
-                <div className="bg-white/80 dark:bg-slate-900/80 p-1.5 rounded border border-lime-500/20 text-center">
+                <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-center">
                   <span className="text-slate-500 block text-[10px]">الصف المقترح</span>
-                  <strong className="text-lime-700 dark:text-lime-300">{nationalIdInfo.grade}</strong>
+                  <strong className="text-emerald-600 dark:text-emerald-400">{nationalIdInfo.grade}</strong>
                 </div>
-                <div className="bg-white/80 dark:bg-slate-900/80 p-1.5 rounded border border-lime-500/20 text-center">
+                <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-center">
                   <span className="text-slate-500 block text-[10px]">الرسوم التلقائية</span>
-                  <strong className="text-lime-700 dark:text-lime-300">{nationalIdInfo.fee} د.ل</strong>
+                  <strong className="text-emerald-600 dark:text-emerald-400">{nationalIdInfo.fee} د.ل</strong>
                 </div>
               </div>
             </div>
@@ -1112,14 +1053,11 @@ function StudentFormModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               
               <div className="md:col-span-2">
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">
-                  اسم الطالب رباعي <span className="text-red-500">*</span>
-                </label>
-                <input 
+                <Input 
                   required 
                   autoFocus
                   type="text" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors" 
+                  label="اسم الطالب رباعي *"
                   value={formData.name} 
                   onChange={e => setFormData({...formData, name: e.target.value})} 
                   placeholder="مثال: عمر طارق محمد الفيتوري"
@@ -1127,14 +1065,11 @@ function StudentFormModal({
               </div>
 
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold flex items-center justify-between">
-                  <span>الرقم الوطني (12 رقم)</span>
-                  <span className="text-[11px] font-normal text-slate-500">استخراج ذكي</span>
-                </label>
-                <input 
+                <Input 
                   type="text" 
                   maxLength={12} 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors font-mono tracking-wider" 
+                  label="الرقم الوطني (12 رقم)"
+                  className="font-mono tracking-wider"
                   value={formData.national_id} 
                   onChange={handleNationalIdChange} 
                   placeholder="120210000000" 
@@ -1142,45 +1077,43 @@ function StudentFormModal({
               </div>
 
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                   الجنس (ذكر / أنثى)
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, gender: 'ذكر' }))}
-                    className={`py-2 rounded-xl text-xs font-bold border transition-all ${formData.gender === 'ذكر' ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
+                    className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${formData.gender === 'ذكر' ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
                   >
-                    ذكر (1)
+                    ذكر
                   </button>
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, gender: 'أنثى' }))}
-                    className={`py-2 rounded-xl text-xs font-bold border transition-all ${formData.gender === 'أنثى' ? 'bg-pink-600 text-white border-pink-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
+                    className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${formData.gender === 'أنثى' ? 'bg-pink-600 text-white border-pink-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
                   >
-                    أنثى (2)
+                    أنثى
                   </button>
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">تاريخ الميلاد</label>
-                <input 
+                <Input 
                   type="date" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors [color-scheme:dark]" 
+                  label="تاريخ الميلاد"
+                  className="[color-scheme:dark]"
                   value={formData.birth_date} 
                   onChange={e => setFormData({...formData, birth_date: e.target.value})} 
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">
-                  رقم هاتف الأب (واتساب) <span className="text-red-500">*</span>
-                </label>
-                <input 
+                <Input 
                   required 
                   type="text" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors font-mono" 
+                  label="رقم هاتف الأب (واتساب) *"
+                  className="font-mono"
                   value={formData.father_phone} 
                   onChange={e => handleNumberInput(e, 'father_phone')} 
                   placeholder="مثال: 0912345678" 
@@ -1188,10 +1121,10 @@ function StudentFormModal({
               </div>
 
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">رقم هاتف الأم / الاحتياطي</label>
-                <input 
+                <Input 
                   type="text" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors font-mono" 
+                  label="رقم هاتف الأم / الاحتياطي"
+                  className="font-mono"
                   value={formData.mother_phone} 
                   onChange={e => handleNumberInput(e, 'mother_phone')} 
                   placeholder="مثال: 0923456789" 
@@ -1199,22 +1132,20 @@ function StudentFormModal({
               </div>
 
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">الصف الدراسي</label>
-                <select 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors font-semibold" 
+                <Select 
+                  label="الصف الدراسي"
                   value={formData.grade} 
                   onChange={handleGradeChange}
                 >
                   <option value="التعليم المبكر">التعليم المبكر ({currentFees.earlyEducationFee || 1300} د.ل)</option>
                   <option value="الروضة">الروضة ({currentFees.kindergartenFee || 1400} د.ل)</option>
                   <option value="التأهيلي">التأهيلي ({currentFees.preparatoryFee || currentFees.kindergartenFee || 1400} د.ل)</option>
-                </select>
+                </Select>
               </div>
 
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">السنة الدراسية</label>
-                <select 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors font-semibold" 
+                <Select 
+                  label="السنة الدراسية"
                   value={formData.academic_year} 
                   onChange={e => setFormData({ ...formData, academic_year: e.target.value })}
                 >
@@ -1223,34 +1154,26 @@ function StudentFormModal({
                       {year} {year === (settings.activeAcademicYear || settings.academicYear) ? '★ (السنة النشطة)' : ''}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1 font-semibold">الفترة الدراسية</label>
-                <select 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 outline-none focus:border-lime-500 transition-colors" 
+                <Select 
+                  label="الفترة الدراسية"
                   value={formData.period} 
                   onChange={e => setFormData({...formData, period: e.target.value})}
                 >
                   <option value="صباحي">صباحي</option>
                   <option value="مسائي">مسائي</option>
-                </select>
+                </Select>
               </div>
 
               <div className="md:col-span-2">
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    إجمالي الرسوم الدراسية (د.ل)
-                  </label>
-                  <span className="text-xs text-lime-600 dark:text-lime-400 font-medium">
-                    مسترد من الإعدادات الافتراضية
-                  </span>
-                </div>
-                <input 
+                <Input 
                   required 
                   type="text" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 font-bold text-lg outline-none focus:border-lime-500 transition-colors" 
+                  label="إجمالي الرسوم الدراسية (د.ل)"
+                  className="font-bold text-base"
                   value={formData.base_fees} 
                   onChange={e => handleNumberInput(e, 'base_fees')}
                   placeholder="أدخل إجمالي الرسوم..."
@@ -1262,7 +1185,7 @@ function StudentFormModal({
                   <button
                     type="button"
                     onClick={() => handleSetBaseFeeOnly(formData.grade)}
-                    className="text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-lime-50 dark:hover:bg-lime-950/40 text-slate-700 dark:text-slate-300 hover:text-lime-600 dark:hover:text-lime-400 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors font-medium"
+                    className="text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors font-medium cursor-pointer"
                   >
                     قسط المرحلة ({getDefaultFeeForGrade(formData.grade)} د.ل)
                   </button>
@@ -1270,7 +1193,7 @@ function StudentFormModal({
                     <button
                       type="button"
                       onClick={() => handleAddExtraFee(currentFees.registrationFee)}
-                      className="text-xs px-2 py-1 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-amber-800 dark:text-amber-300 rounded-lg border border-amber-200 dark:border-amber-800/50 transition-colors font-medium"
+                      className="text-xs px-2 py-1 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-amber-800 dark:text-amber-300 rounded-lg border border-amber-200 dark:border-amber-800/50 transition-colors font-medium cursor-pointer"
                     >
                       + تسجيل ({currentFees.registrationFee} د.ل)
                     </button>
@@ -1279,7 +1202,7 @@ function StudentFormModal({
                     <button
                       type="button"
                       onClick={() => handleAddExtraFee(currentFees.uniformFee)}
-                      className="text-xs px-2 py-1 bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 text-cyan-800 dark:text-cyan-300 rounded-lg border border-cyan-200 dark:border-cyan-800/50 transition-colors font-medium"
+                      className="text-xs px-2 py-1 bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 text-cyan-800 dark:text-cyan-300 rounded-lg border border-cyan-200 dark:border-cyan-800/50 transition-colors font-medium cursor-pointer"
                     >
                       + زي ({currentFees.uniformFee} د.ل)
                     </button>
@@ -1288,7 +1211,7 @@ function StudentFormModal({
                     <button
                       type="button"
                       onClick={() => handleAddExtraFee(currentFees.booksFee)}
-                      className="text-xs px-2 py-1 bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 text-purple-800 dark:text-purple-300 rounded-lg border border-purple-200 dark:border-purple-800/50 transition-colors font-medium"
+                      className="text-xs px-2 py-1 bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 text-purple-800 dark:text-purple-300 rounded-lg border border-purple-200 dark:border-purple-800/50 transition-colors font-medium cursor-pointer"
                     >
                       + كتب ({currentFees.booksFee} د.ل)
                     </button>
@@ -1299,25 +1222,19 @@ function StudentFormModal({
                       const total = Number(getDefaultFeeForGrade(formData.grade)) + (currentFees.registrationFee || 0) + (currentFees.uniformFee || 0) + (currentFees.booksFee || 0);
                       setFormData(prev => ({ ...prev, base_fees: String(total) }));
                     }}
-                    className="text-xs px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-800 dark:text-emerald-300 rounded-lg border border-emerald-200 dark:border-emerald-800/50 transition-colors font-medium"
+                    className="text-xs px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-800 dark:text-emerald-300 rounded-lg border border-emerald-200 dark:border-emerald-800/50 transition-colors font-medium cursor-pointer"
                   >
                     شامل الرسوم واللوازم ({Number(getDefaultFeeForGrade(formData.grade)) + (currentFees.registrationFee || 0) + (currentFees.uniformFee || 0) + (currentFees.booksFee || 0)} د.ل)
                   </button>
                 </div>
-
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">
-                  * الرسوم التلقائية المعتمدة: التعليم المبكر ({currentFees.earlyEducationFee || 1300} د.ل) / الروضة ({currentFees.kindergartenFee || 1400} د.ل) / التأهيلي ({currentFees.preparatoryFee || currentFees.kindergartenFee || 1400} د.ل).
-                </p>
               </div>
 
               {!isEditMode && (
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    المبلغ المدفوع عند التسجيل (د.ل) - اختياري
-                  </label>
-                  <input 
+                  <Input 
                     type="text" 
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-2.5 text-slate-900 dark:text-slate-100 font-bold text-lg outline-none focus:border-lime-500 transition-colors" 
+                    label="المبلغ المدفوع عند التسجيل (د.ل) - اختياري"
+                    className="font-bold text-base"
                     value={formData.initial_paid} 
                     onChange={e => handleNumberInput(e, 'initial_paid')} 
                     placeholder="0.00"
@@ -1328,9 +1245,63 @@ function StudentFormModal({
                 </div>
               )}
 
+              {/* Transportation Service Section */}
+              <div className="md:col-span-2 pt-2">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 transition-all duration-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg transition-colors ${formData.hasTransport ? 'bg-amber-100 text-amber-700' : 'bg-slate-200 text-slate-500'}`}>
+                        <BusFront size={18} />
+                      </div>
+                      <div>
+                        <span className="font-bold text-xs text-slate-800 block">
+                          اشتراك المواصلات
+                        </span>
+                        <span className="text-[11px] text-slate-500 font-medium">
+                          تفعيل خدمة حافلة النقل المدرسي للطالب
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={formData.hasTransport}
+                      onClick={() => setFormData(prev => ({ 
+                        ...prev, 
+                        hasTransport: !prev.hasTransport,
+                        transportLandmark: !prev.hasTransport ? prev.transportLandmark : '' 
+                      }))}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        formData.hasTransport ? 'bg-amber-500' : 'bg-slate-300'
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                          formData.hasTransport ? '-translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {formData.hasTransport && (
+                    <div className="mt-4 pt-3.5 border-t border-slate-200 animate-in fade-in duration-200">
+                      <Input
+                        type="text"
+                        required={formData.hasTransport}
+                        label="أقرب نقطة دالة *"
+                        value={formData.transportLandmark}
+                        onChange={e => setFormData({ ...formData, transportLandmark: e.target.value })}
+                        placeholder="مثال: بالقرب من جامع النور، بجوار صيدلية السلام..."
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Birth Certificate / Documents Section */}
               <div className="md:col-span-2 pt-2">
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
                   إرفاق شهادة الميلاد / المستندات
                 </label>
                 
@@ -1355,20 +1326,20 @@ function StudentFormModal({
                   />
                   <label 
                     htmlFor="cameraInput" 
-                    className="cursor-pointer inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white px-4 py-2.5 rounded-lg text-xs font-semibold shadow-sm transition-all"
+                    className="cursor-pointer inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all"
                   >
-                    <Camera size={16} />
+                    <Camera size={15} />
                     <span>إرفاق مستند / فتح الكاميرا</span>
                   </label>
 
                   {formData.birth_certificate && (
-                    <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                    <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-700 dark:text-emerald-300">
                       <Check size={14} className="text-emerald-600 dark:text-emerald-400" />
                       <span>تم إرفاق المستند بنجاح</span>
                       <button
                         type="button"
                         onClick={() => setFormData(prev => ({ ...prev, birth_certificate: '' }))}
-                        className="text-rose-600 hover:text-rose-700 font-bold mr-1.5 px-1 transition-colors"
+                        className="text-rose-600 hover:text-rose-700 font-bold mr-1.5 px-1 transition-colors cursor-pointer"
                         title="حذف المستند"
                       >
                         ×
@@ -1380,23 +1351,27 @@ function StudentFormModal({
 
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-700/50 mt-4">
-              <button type="button" onClick={onClose} className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 rounded-lg transition-colors font-medium text-sm">
+            <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-white/5 mt-4">
+              <button 
+                type="button" 
+                onClick={onClose} 
+                className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 rounded-xl transition-colors font-bold text-xs cursor-pointer"
+              >
                 إلغاء
               </button>
               <button 
                 ref={submitButtonRef}
                 type="submit" 
                 disabled={loading} 
-                className={`flex-[2] py-2.5 rounded-lg transition-all duration-200 font-medium text-sm text-white shadow-sm hover:shadow-md active:scale-[0.98] ${isEditMode ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                className={`flex-[2] py-2.5 rounded-xl transition-all duration-200 font-bold text-xs text-white shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer ${isEditMode ? 'bg-amber-600 hover:bg-amber-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}
               >
-                {loading ? 'جاري الحفظ...' : (isEditMode ? 'حفظ التعديلات (Ctrl+S)' : 'حفظ بيانات الطالب (Ctrl+S)')}
+                {loading ? 'جاري الحفظ...' : (isEditMode ? 'حفظ التعديلات' : 'حفظ بيانات الطالب')}
               </button>
             </div>
           </form>
         </div>
-      </div>
-    </div>
+      </Modal>
+    </>
   );
 }
 
@@ -1481,100 +1456,102 @@ function InstallmentModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/80 dark:bg-slate-950/80 flex items-center justify-center z-[110] p-4">
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[15px] w-full max-w-md overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-100 dark:bg-slate-900/50">
-          <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">تسجيل دفعة مالية</h2>
-          <button onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white">&times;</button>
-        </div>
-        <div className="p-6">
-          {inst ? (
-            <div className="space-y-4">
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 mb-2">
-                <div className="flex justify-between mb-2">
-                  <span className="text-slate-500 dark:text-slate-400 text-sm">اسم الطالب:</span> 
-                  <span className="font-bold text-slate-900 dark:text-slate-200">{student.name}</span>
-                </div>
-                <div className="flex justify-between mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <span className="text-slate-600 dark:text-slate-300">المتبقي عليه:</span> 
-                  <span className="font-bold text-orange-400 text-lg">{remaining} د.ل</span>
-                </div>
-                {remaining > 0 && (
-                  <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const phone = (student.father_phone || student.mother_phone || '').trim();
-                        if (phone) {
-                          const url = getWhatsAppReminderUrl(phone, student.name, remaining, {
-                            customSchoolName: settings.schoolName,
-                            grade: student.grade,
-                            currency: settings.currency,
-                            template: settings.whatsappTemplate
-                          });
-                          window.open(url, '_blank', 'noopener,noreferrer');
-                        } else if (onOpenWhatsAppModal) {
-                          onOpenWhatsAppModal(student, remaining);
-                        }
-                      }}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.98] cursor-pointer"
-                    >
-                      <MessageCircle size={15} className="shrink-0" />
-                      <span>
-                        {student.father_phone || student.mother_phone 
-                          ? `إرسال تذكير بالدفع عبر واتساب (${student.father_phone || student.mother_phone})`
-                          : 'إرسال تذكير بالدفع عبر واتساب (إدخال الرقم)'}
-                      </span>
-                    </button>
-                  </div>
-                )}
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      maxWidth="md"
+      title="تسجيل دفعة مالية"
+    >
+      <div>
+        {inst ? (
+          <div className="space-y-4">
+            <div className="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 mb-2">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-slate-500 dark:text-slate-400 text-xs font-bold">اسم الطالب:</span> 
+                <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">{student.name}</span>
               </div>
-              
-              {errorMsg && (
-                <div className="bg-red-500/10 text-red-400 border border-red-500/50 p-3 rounded-lg text-sm text-center">
-                  {errorMsg}
+              <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 dark:border-slate-700/80">
+                <span className="text-slate-600 dark:text-slate-300 text-xs font-bold">المتبقي عليه:</span> 
+                <span className="font-extrabold text-amber-600 dark:text-amber-400 text-base">{remaining} د.ل</span>
+              </div>
+              {remaining > 0 && (
+                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700/80">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const phone = (student.father_phone || student.mother_phone || '').trim();
+                      if (phone) {
+                        const url = getWhatsAppReminderUrl(phone, student.name, remaining, {
+                          customSchoolName: settings.schoolName,
+                          grade: student.grade,
+                          currency: settings.currency,
+                          template: settings.whatsappTemplate
+                        });
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      } else if (onOpenWhatsAppModal) {
+                        onOpenWhatsAppModal(student, remaining);
+                      }
+                    }}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm active:scale-[0.98] cursor-pointer"
+                  >
+                    <MessageCircle size={15} className="shrink-0" />
+                    <span>
+                      {student.father_phone || student.mother_phone 
+                        ? `إرسال تذكير بالدفع عبر واتساب (${student.father_phone || student.mother_phone})`
+                        : 'إرسال تذكير بالدفع عبر واتساب (إدخال الرقم)'}
+                    </span>
+                  </button>
                 </div>
               )}
-
-              <div>
-                <label className="block text-sm text-slate-500 dark:text-slate-400 mb-1">المبلغ المدفوع الآن (د.ل)</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 outline-none focus:border-lime-500 transition-colors font-bold text-lg" 
-                  value={payAmount} 
-                  onChange={e => {
-                    const val = e.target.value.replace(/[^0-9.]/g, '');
-                    setPayAmount(val);
-                  }} 
-                  placeholder="0.00" 
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-slate-500 dark:text-slate-400 mb-1">ملاحظات / البيان</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-900 dark:text-slate-200 outline-none focus:border-lime-500 transition-colors" 
-                  value={notes} 
-                  onChange={e => setNotes(e.target.value)} 
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button type="button" onClick={onClose} className="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white py-3 rounded-xl transition-colors font-bold">
-                  إلغاء
-                </button>
-                <button onClick={() => handlePay(inst.id)} className="flex-[2] bg-lime-600 hover:bg-lime-500 text-slate-900 py-3 rounded-xl transition-colors font-bold shadow-[0_0_15px_rgba(132,204,22,0.2)]">
-                  تأكيد الدفع
-                </button>
-              </div>
             </div>
-          ) : (
-            <div className="text-slate-500 dark:text-slate-400 text-center py-4">لا توجد أقساط مسجلة لهذا الطالب</div>
-          )}
-        </div>
+            
+            {errorMsg && (
+              <div className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 p-3 rounded-xl text-xs font-bold text-center">
+                {errorMsg}
+              </div>
+            )}
+
+            <Input
+              type="text"
+              label="المبلغ المدفوع الآن (د.ل)"
+              className="font-bold text-base"
+              value={payAmount}
+              onChange={e => {
+                const val = e.target.value.replace(/[^0-9.]/g, '');
+                setPayAmount(val);
+              }}
+              placeholder="0.00"
+            />
+
+            <Input
+              type="text"
+              label="ملاحظات / البيان"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+            />
+
+            <div className="flex gap-2.5 pt-3 border-t border-slate-100 dark:border-white/5">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 rounded-xl transition-colors font-bold text-xs"
+              >
+                إلغاء
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePay(inst.id)}
+                className="flex-[2] bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white py-2.5 rounded-xl transition-all font-bold text-xs shadow-sm active:scale-[0.98]"
+              >
+                تأكيد الدفع
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-slate-500 dark:text-slate-400 text-center py-4 text-xs font-medium">لا توجد أقساط مسجلة لهذا الطالب</div>
+        )}
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -1596,96 +1573,90 @@ function BulkWhatsAppModal({
   });
 
   return (
-    <div className="fixed inset-0 bg-slate-900/80 dark:bg-slate-950/80 flex items-center justify-center z-[110] p-4 backdrop-blur-sm">
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[15px] w-full max-w-2xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-100 dark:bg-slate-900/50">
-          <div className="flex items-center gap-3">
-            <div className="bg-emerald-500/20 p-2 rounded-lg text-emerald-400">
-              <MessageCircle size={24} />
-            </div>
-            <div>
-              <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">المراسلة الجماعية والتذكير (واتساب)</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">{targetStudents.length} طلاب لديهم أقساط متبقية</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white transition-colors text-2xl font-bold">&times;</button>
-        </div>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      maxWidth="2xl"
+      title="المراسلة الجماعية والتذكير (واتساب)"
+    >
+      <div className="space-y-4">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          {targetStudents.length} طلاب لديهم أقساط متبقية
+        </p>
         
-        <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+        <div className="max-h-[60vh] overflow-y-auto space-y-3 custom-scrollbar pr-0.5">
           {targetStudents.length === 0 ? (
-            <div className="text-center py-10 text-slate-500 dark:text-slate-400">
+            <div className="text-center py-10 text-slate-500 dark:text-slate-400 text-xs font-medium">
               لا يوجد طلاب لديهم أقساط متبقية حالياً.
             </div>
           ) : (
-            <div className="space-y-3">
-              {targetStudents.map(student => {
-                const remaining = student.final_fees - (student.total_paid || 0);
-                const phone = (student.father_phone || student.mother_phone || '').trim();
-                const waLink = phone ? getWhatsAppReminderUrl(phone, student.name, remaining, {
-                  customSchoolName: settings.schoolName,
-                  grade: student.grade,
-                  currency: settings.currency,
-                  template: settings.whatsappTemplate
-                }) : '#';
+            targetStudents.map(student => {
+              const remaining = student.final_fees - (student.total_paid || 0);
+              const phone = (student.father_phone || student.mother_phone || '').trim();
+              const waLink = phone ? getWhatsAppReminderUrl(phone, student.name, remaining, {
+                customSchoolName: settings.schoolName,
+                grade: student.grade,
+                currency: settings.currency,
+                template: settings.whatsappTemplate
+              }) : '#';
 
-                return (
-                  <div key={student.id} className="bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4 hover:border-emerald-500/50 transition-colors">
-                    <div>
-                      <h3 className="font-bold text-slate-900 dark:text-slate-200 text-sm flex items-center gap-2">
-                        <span>{student.name}</span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">({student.grade || 'غير محدد'})</span>
-                      </h3>
-                      <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        <span>المتبقي: <strong className="text-rose-600 dark:text-rose-400 font-black">{remaining} {settings.currency || 'د.ل'}</strong></span>
-                        <span>•</span>
-                        <span>الهاتف: <strong className="font-mono text-slate-700 dark:text-slate-300">{phone || 'غير مسجل'}</strong></span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                      {phone ? (
-                        <a 
-                          href={waLink} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all text-xs font-bold w-full sm:w-auto justify-center shadow-sm"
-                        >
-                          <MessageCircle size={15} />
-                          <span>إرسال تذكير</span>
-                        </a>
-                      ) : null}
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onOpenIndividualModal) {
-                            onOpenIndividualModal(student, remaining);
-                          }
-                        }}
-                        className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors ${!phone ? 'bg-amber-600 hover:bg-amber-700 text-white w-full sm:w-auto justify-center' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700'}`}
-                        title={!phone ? "إدخال رقم الهاتف والإرسال" : "تخصيص الرسالة قبل الإرسال"}
-                      >
-                        {!phone ? (
-                          <>
-                            <Phone size={13} />
-                            <span>إدخال رقم الهاتف وإرسال</span>
-                          </>
-                        ) : (
-                          <>
-                            <Pencil size={13} />
-                            <span>تخصيص</span>
-                          </>
-                        )}
-                      </button>
+              return (
+                <div key={student.id} className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl p-3.5 flex flex-col sm:flex-row justify-between items-center gap-3 hover:border-emerald-500/50 transition-colors">
+                  <div>
+                    <h3 className="font-bold text-slate-900 dark:text-slate-100 text-xs flex items-center gap-2">
+                      <span>{student.name}</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-normal">({student.grade || 'غير محدد'})</span>
+                    </h3>
+                    <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      <span>المتبقي: <strong className="text-rose-600 dark:text-rose-400 font-bold">{remaining} {settings.currency || 'د.ل'}</strong></span>
+                      <span>•</span>
+                      <span>الهاتف: <strong className="font-mono text-slate-700 dark:text-slate-300">{phone || 'غير مسجل'}</strong></span>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                  
+                  <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                    {phone ? (
+                      <a 
+                        href={waLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 transition-all text-xs font-bold w-full sm:w-auto justify-center shadow-sm active:scale-[0.98]"
+                      >
+                        <MessageCircle size={14} />
+                        <span>إرسال تذكير</span>
+                      </a>
+                    ) : null}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onOpenIndividualModal) {
+                          onOpenIndividualModal(student, remaining);
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors ${!phone ? 'bg-amber-600 hover:bg-amber-700 text-white w-full sm:w-auto justify-center' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600'}`}
+                      title={!phone ? "إدخال رقم الهاتف والإرسال" : "تخصيص الرسالة قبل الإرسال"}
+                    >
+                      {!phone ? (
+                        <>
+                          <Phone size={13} />
+                          <span>إدخال رقم وإرسال</span>
+                        </>
+                      ) : (
+                        <>
+                          <Pencil size={13} />
+                          <span>تخصيص</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -1709,46 +1680,44 @@ function ReceiptPreviewModal({
   onPrint: () => void;
 }) {
   return (
-    <div className="fixed inset-0 bg-slate-950/85 flex items-center justify-center z-[120] p-4 backdrop-blur-md">
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[15px] w-full max-w-5xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col max-h-[95vh]">
-        {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-100 dark:bg-slate-900/60">
-          <div className="flex items-center gap-2 text-slate-900 dark:text-slate-100 font-bold">
-            <ReceiptIcon size={20} className="text-blue-500" />
-            <span>معاينة إيصال السداد المالي (20cm × 9.8cm)</span>
-          </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors text-xl font-bold">&times;</button>
-        </div>
-
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      maxWidth="5xl"
+      title="معاينة إيصال السداد المالي (20cm × 9.8cm)"
+    >
+      <div className="space-y-4">
         {/* Modal Body - Table Preview */}
-        <div className="p-6 overflow-y-auto overflow-x-auto flex-1 bg-slate-200/80 dark:bg-slate-950/90 flex flex-col items-center justify-center gap-4 custom-scrollbar">
-          <div className="text-xs text-slate-600 dark:text-slate-400 font-medium text-center">
-            تم ضبط مقاس الإيصال بالضبط على 20 سم عرض × 9.8 سم ارتفاع بجداول HTML مسطحة
+        <div className="p-6 overflow-y-auto overflow-x-auto max-h-[65vh] bg-slate-100 dark:bg-slate-950/80 rounded-2xl flex flex-col items-center justify-center gap-4 custom-scrollbar border border-slate-200 dark:border-slate-800">
+          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center">
+            تم ضبط مقاس الإيصال على 20 سم عرض × 9.8 سم ارتفاع بجداول HTML مسطحة
           </div>
           
-          <div className="bg-white text-black p-0 border border-black shadow-2xl w-[20cm] max-w-[20cm] box-border" style={{ direction: 'rtl' }}>
+          <div className="bg-white text-black p-0 border border-black shadow-lg w-[20cm] max-w-[20cm] box-border" style={{ direction: 'rtl' }}>
             <Receipt receiptData={receiptData} />
           </div>
         </div>
 
         {/* Modal Actions */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 flex gap-3">
+        <div className="pt-2 flex items-center gap-3">
           <button
+            type="button"
             onClick={onClose}
-            className="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white py-2.5 rounded-xl transition-colors font-bold text-sm"
+            className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 rounded-xl transition-colors font-bold text-xs"
           >
             إغلاق
           </button>
           <button
+            type="button"
             onClick={onPrint}
-            className="flex-[2] bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl transition-all duration-300 font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:scale-[1.01]"
+            className="flex-[2] bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white py-2.5 rounded-xl transition-all font-bold text-xs flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
           >
-            <Printer size={18} />
+            <Printer size={16} />
             <span>طباعة الإيصال (Print)</span>
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -1765,66 +1734,51 @@ function DeleteStudentModal({
   onConfirm: () => void;
 }) {
   return (
-    <div className="fixed inset-0 bg-slate-950/80 flex items-center justify-center z-[110] p-4 backdrop-blur-sm">
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[15px] w-full max-w-md overflow-hidden shadow-[0_0_30px_rgba(239,68,68,0.25)] flex flex-col animate-in fade-in zoom-in-95 duration-200">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-red-500/30 bg-red-500/10 flex justify-between items-center text-red-600 dark:text-red-400">
-          <div className="flex items-center gap-2.5 font-bold text-lg">
-            <div className="p-2 bg-red-500/20 rounded-xl">
-              <AlertTriangle size={20} className="text-red-500" />
-            </div>
-            <span>تأكيد حذف الطالب</span>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      maxWidth="md"
+      title="تأكيد حذف الطالب"
+    >
+      <div className="space-y-4 text-start">
+        <p className="text-slate-800 dark:text-slate-200 text-sm leading-relaxed">
+          هل أنت متأكد من حذف بيانات الطالب <strong className="text-rose-600 dark:text-rose-400 font-black">[{student.name}]</strong> نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.
+        </p>
+
+        {/* Student Info Card */}
+        <div className="bg-slate-50 dark:bg-slate-800/80 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/70 text-xs space-y-2 text-slate-600 dark:text-slate-300">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-500 dark:text-slate-400 font-bold">الصف الدراسي:</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200">{student.grade || 'غير محدد'}</span>
           </div>
-          <button 
-            onClick={onClose} 
-            disabled={isDeleting}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors text-2xl font-bold leading-none"
-          >
-            &times;
-          </button>
+          <div className="flex justify-between items-center">
+            <span className="text-slate-500 dark:text-slate-400 font-bold">هاتف ولي الأمر:</span>
+            <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{student.father_phone}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-slate-500 dark:text-slate-400 font-bold">إجمالي الرسوم:</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200">{student.final_fees} د.ل</span>
+          </div>
+          {student.total_paid !== undefined && (
+            <div className="flex justify-between items-center pt-1 border-t border-slate-200 dark:border-slate-700/50">
+              <span className="text-slate-500 dark:text-slate-400 font-bold">المبلغ المسدد:</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">{student.total_paid} د.ل</span>
+            </div>
+          )}
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-4 text-start">
-          <p className="text-slate-800 dark:text-slate-200 text-base leading-relaxed">
-            هل أنت متأكد من حذف بيانات الطالب <strong className="text-red-600 dark:text-red-400 font-black">[{student.name}]</strong> نهائياً؟ هذا الإجراء لا يمكن التراجع عنه.
-          </p>
-
-          {/* Student Info Card */}
-          <div className="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/70 text-xs space-y-2 text-slate-600 dark:text-slate-300">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 dark:text-slate-400">الصف الدراسي:</span>
-              <span className="font-bold text-slate-800 dark:text-slate-200">{student.grade || 'غير محدد'}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 dark:text-slate-400">هاتف ولي الأمر:</span>
-              <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{student.father_phone}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 dark:text-slate-400">إجمالي الرسوم:</span>
-              <span className="font-bold text-slate-800 dark:text-slate-200">{student.final_fees} د.ل</span>
-            </div>
-            {student.total_paid !== undefined && (
-              <div className="flex justify-between items-center pt-1 border-t border-slate-200 dark:border-slate-700/50">
-                <span className="text-slate-500 dark:text-slate-400">المبلغ المسدد:</span>
-                <span className="font-bold text-lime-500">{student.total_paid} د.ل</span>
-              </div>
-            )}
-          </div>
-
-          <div className="text-xs text-amber-600 dark:text-amber-400/90 bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg flex items-center gap-2">
-            <AlertTriangle size={15} className="shrink-0 text-amber-500" />
-            <span>سيتم حذف سجل الطالب وكافة أقساطه المرتبطة من المنظومة والتخزين المحلي.</span>
-          </div>
+        <div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-xl flex items-center gap-2">
+          <AlertTriangle size={15} className="shrink-0 text-amber-500" />
+          <span>سيتم حذف سجل الطالب وكافة أقساطه المرتبطة من المنظومة والتخزين المحلي.</span>
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 flex gap-3">
+        <div className="pt-2 flex gap-3 border-t border-slate-100 dark:border-white/5">
           <button
             type="button"
             onClick={onClose}
             disabled={isDeleting}
-            className="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 py-2.5 rounded-xl transition-colors font-bold text-sm disabled:opacity-50"
+            className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-2.5 rounded-xl transition-colors font-bold text-xs disabled:opacity-50"
           >
             إلغاء
           </button>
@@ -1832,14 +1786,14 @@ function DeleteStudentModal({
             type="button"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="flex-[1.5] bg-red-600 hover:bg-red-500 text-white py-2.5 rounded-xl transition-all duration-200 font-bold text-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:scale-[1.02] disabled:opacity-50"
+            className="flex-[1.5] bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl transition-all font-bold text-xs flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-50"
           >
-            <Trash2 size={16} />
-            <span>{isDeleting ? 'جاري الحذف...' : 'نعم، احذف الطالب نهائياً'}</span>
+            <Trash2 size={15} />
+            <span>{isDeleting ? 'جاري الحذف...' : 'نعم، احذف الطالب'}</span>
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 

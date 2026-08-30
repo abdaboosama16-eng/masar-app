@@ -174,3 +174,47 @@ export function hasPermission(
       return false;
   }
 }
+
+export interface AuditLogEntry {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  details: string;
+  timestamp: string;
+  ip?: string;
+}
+
+const AUDIT_STORAGE_KEY = 'masar_audit_logs';
+
+export function getAuditLogs(): AuditLogEntry[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(AUDIT_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (err) {
+    console.error('Error reading audit logs:', err);
+    return [];
+  }
+}
+
+export function addAuditLog(action: string, details: string, user?: LocalUser | null): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const currentUser = user || getActiveSessionUser() || { id: 'admin', name: 'المدير الأساسي' };
+    const logs = getAuditLogs();
+    const newEntry: AuditLogEntry = {
+      id: Date.now().toString(),
+      userId: currentUser.id,
+      userName: currentUser.name,
+      action,
+      details,
+      timestamp: new Date().toISOString()
+    };
+    const updated = [newEntry, ...logs].slice(0, 100);
+    localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(updated));
+  } catch (err) {
+    console.error('Error saving audit log:', err);
+  }
+}
+

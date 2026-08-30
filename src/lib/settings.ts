@@ -87,9 +87,9 @@ export const DEFAULT_WHATSAPP_TEMPLATE = `السلام عليكم ورحمة ا�
 
 export const DEFAULT_SETTINGS: SchoolSettings = {
   requireLogin: false,
-  schoolName: 'مدرسة نور البيان',
-  schoolNameEn: 'NOUR ALBIAN SCHOOL',
-  schoolType: 'للتعليم الخاص',
+  schoolName: 'منظومة مسار',
+  schoolNameEn: 'MASAR SYSTEM',
+  schoolType: 'للتعليم الخاص ورياض الأطفال',
   phone: '',
   address: '',
   logo: defaultLogo,
@@ -100,7 +100,7 @@ export const DEFAULT_SETTINGS: SchoolSettings = {
   currency: 'د.ل',
   currencyPosition: 'after',
   whatsappTemplate: DEFAULT_WHATSAPP_TEMPLATE,
-  receiptFooterNotice: 'نسعد بثقتكم.. مدرسة نور البيان تتمنى لكم عاماً دراسياً موفقاً',
+  receiptFooterNotice: 'نسعد بثقتكم.. منظومة مسار تتمنى لكم عاماً دراسياً موفقاً',
   users: DEFAULT_USERS,
   activeUserId: 'user-admin-1',
   subscriptionPlan: 'pro'
