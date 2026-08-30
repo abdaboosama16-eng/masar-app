@@ -198,7 +198,7 @@ export default function DailyClosingModal({ onClose, students = [], transactions
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
               {todayStudents.map(student => (
-                <div key={student.id} className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-xs flex justify-between items-center shadow-xs">
+                <div key={student.id} className="bg-white dark:bg-slate-800/60 backdrop-blur-md p-3 rounded-lg border border-slate-200 dark:border-slate-700/50 text-xs flex justify-between items-center shadow-xs">
                   <div>
                     <p className="font-bold text-slate-900 dark:text-slate-100">{student.name}</p>
                     <p className="text-slate-500 text-[11px] mt-0.5">{student.grade} • {student.period || 'صباحي'}</p>

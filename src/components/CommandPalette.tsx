@@ -54,7 +54,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
       />
       
       {/* Modal */}
-      <div className="relative w-full max-w-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-xl bg-white/95 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700/50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Search Input */}
         <div className="flex items-center px-4 py-4 border-b border-slate-100 dark:border-slate-800">
@@ -91,7 +91,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
                     className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/30 group transition-all text-start"
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg \${cmd.type === 'action' ? 'bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'} group-hover:bg-white dark:group-hover:bg-slate-800 transition-colors shadow-sm`}>
+                      <div className={`p-2 rounded-lg ${cmd.type === 'action' ? 'bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'} group-hover:bg-white dark:group-hover:bg-slate-800 transition-colors shadow-sm`}>
                         <Icon className="w-4 h-4" />
                       </div>
                       <span className="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">

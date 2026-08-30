@@ -116,10 +116,10 @@ export default function App() {
   const isAdmin = effectiveUser.role === 'admin';
 
   return (
-    <div className="h-screen w-full flex flex-col bg-gray-50 dark:bg-slate-950 overflow-hidden font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="h-screen w-full flex flex-col bg-gray-50 dark:bg-transparent overflow-hidden font-sans text-slate-900 dark:text-gray-100 transition-colors duration-300">
       
       {/* Top Header Bar: Clean, Minimal Solid "لوحة التحكم" */}
-      <header className="h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between px-5 md:px-8 select-none z-30 shrink-0">
+      <header className="h-16 bg-white dark:bg-slate-800/60 backdrop-blur-md border-b border-gray-200 dark:border-slate-700/50 flex items-center justify-between px-5 md:px-8 select-none z-30 shrink-0">
         <div className="flex items-center gap-3.5">
           {/* Mobile Menu Trigger */}
           <button 
@@ -315,7 +315,7 @@ export default function App() {
         </aside>
 
         {/* Main Content Workspace: Clean Solid Background */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-10 bg-gray-50 dark:bg-slate-950 w-full transition-colors duration-300">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-10 bg-gray-50 dark:bg-transparent w-full transition-colors duration-300">
           <div className="max-w-7xl mx-auto h-full pb-12">
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'students' && <StudentsPage />}

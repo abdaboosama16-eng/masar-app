@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   KeyRound, ShieldCheck, Phone, School, CheckCircle2, 
-  AlertCircle, Sparkles, Lock, ArrowRight, Check, ExternalLink, HelpCircle
+  AlertCircle, Lock, ArrowRight, Check, ExternalLink, HelpCircle
 } from 'lucide-react';
 import { 
   activatePlatform, getWhatsAppActivationRequestUrl, 
@@ -71,14 +71,14 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
 
   return (
     <div 
-      className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-slate-100 flex items-center justify-center p-3 sm:p-6 md:p-8 select-none relative overflow-hidden font-sans"
+      className="min-h-screen w-full bg-dark-texture text-gray-100 flex items-center justify-center p-3 sm:p-6 md:p-8 select-none relative overflow-hidden font-sans"
       dir="rtl"
     >
       {/* Background Decorative Circles */}
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+      <div className="w-full max-w-xl bg-slate-800/60 backdrop-blur-md border border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
         
         {/* Top Header Card */}
         <div className="bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 text-center relative border-b border-indigo-800/40">
@@ -100,7 +100,7 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
         </div>
 
         {/* Main Activation Form */}
-        <div className="p-6 sm:p-8 text-slate-800 dark:text-slate-200">
+        <div className="p-6 sm:p-8 text-gray-100">
           {isSuccess ? (
             <div className="text-center py-8 space-y-4 animate-in fade-in">
               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-300 dark:border-emerald-800">
@@ -137,8 +137,8 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
 
               {/* School Name */}
               <div>
-                <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <School size={14} className="text-indigo-600 dark:text-cyan-400" />
+                <label className="block text-xs font-black text-gray-100 mb-1.5 flex items-center gap-1.5">
+                  <School size={14} className="text-cyan-400" />
                   <span>اسم المدرسة / المؤسسة التعليمية *</span>
                 </label>
                 <input
@@ -147,14 +147,14 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
                   value={schoolName}
                   onChange={(e) => setSchoolName(e.target.value)}
                   placeholder="مثلاً: مدرسة نور البيان"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600 dark:focus:border-cyan-400 transition-all shadow-inner"
+                  className="w-full bg-slate-950/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-xs font-bold text-gray-100 outline-none focus:border-cyan-400 transition-all shadow-inner"
                 />
               </div>
 
               {/* Phone Number */}
               <div>
-                <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <Phone size={14} className="text-indigo-600 dark:text-cyan-400" />
+                <label className="block text-xs font-black text-gray-100 mb-1.5 flex items-center gap-1.5">
+                  <Phone size={14} className="text-cyan-400" />
                   <span>رقم هاتف التواصل المعتمد *</span>
                 </label>
                 <input
@@ -163,7 +163,7 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="مثلاً: 0927211505"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600 dark:focus:border-cyan-400 transition-all text-left shadow-inner"
+                  className="w-full bg-slate-950/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-xs font-bold text-gray-100 outline-none focus:border-cyan-400 transition-all text-left shadow-inner"
                   dir="ltr"
                 />
               </div>
@@ -171,14 +171,14 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
               {/* Activation Key */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-black text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                    <KeyRound size={14} className="text-indigo-600 dark:text-cyan-400" />
+                  <label className="text-xs font-black text-gray-100 flex items-center gap-1.5">
+                    <KeyRound size={14} className="text-cyan-400" />
                     <span>رمز التفعيل (Activation Key) *</span>
                   </label>
                   <button
                     type="button"
                     onClick={handleApplyDemoKey}
-                    className="text-[11px] text-indigo-600 dark:text-cyan-400 hover:underline font-bold"
+                    className="text-[11px] text-cyan-400 hover:underline font-bold"
                   >
                     تجربة رمز افتراضي (MASAR-2026-VIP)
                   </button>
@@ -193,15 +193,15 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
                       if (errorMsg) setErrorMsg(null);
                     }}
                     placeholder="MASAR-2026-XXXX"
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-black font-mono tracking-wider text-slate-900 dark:text-white outline-none focus:border-indigo-600 dark:focus:border-cyan-400 transition-all text-left uppercase shadow-inner"
+                    className="w-full bg-slate-950/60 border border-slate-700/50 rounded-xl px-4 py-3 text-sm font-black font-mono tracking-wider text-gray-100 outline-none focus:border-cyan-400 transition-all text-left uppercase shadow-inner"
                     dir="ltr"
                   />
                   <div className="absolute right-3 top-3 text-slate-400 pointer-events-none">
                     <Lock size={16} />
                   </div>
                 </div>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
-                  صيغة الرمز تبدأ بـ <code className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-indigo-700 dark:text-cyan-400 font-mono">MASAR-2026-</code> متبوعة برمز المؤسسة.
+                <p className="text-[11px] text-slate-400 mt-1">
+                  صيغة الرمز تبدأ بـ <code className="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-400 font-mono">MASAR-2026-</code> متبوعة برمز المؤسسة.
                 </p>
               </div>
 
@@ -226,7 +226,7 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
                   href={whatsAppUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/80 py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
                 >
                   <WhatsAppIcon size={16} className="text-emerald-600 dark:text-emerald-400" />
                   <span>طلب رمز التفعيل من المطور عبر واتساب (0927211505)</span>
@@ -235,7 +235,7 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({ onActivated 
               </div>
 
               {/* Offline Security Footer Notice */}
-              <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 text-center">
+              <div className="mt-4 pt-4 border-t border-slate-700/50 text-center">
                 <div className="inline-flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500">
                   <ShieldCheck size={14} className="text-emerald-500" />
                   <span>المنظومة تعمل بشكل محلي آمن (Offline-First) والترخيص يُحفظ على هذا الجهاز</span>

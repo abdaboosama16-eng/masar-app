@@ -112,7 +112,7 @@ export const BackupRestoreControls: React.FC<BackupRestoreControlsProps> = ({
           localStorage.setItem(key, data[key]);
         }
         
-        showStatus('🎉 تم فك تشفير البيانات واستعادتها بنجاح!', 'success');
+        showStatus('تم فك تشفير البيانات واستعادتها بنجاح.', 'success');
         if (onSuccess) onSuccess();
         
         // Reload after 2 seconds to apply changes everywhere
@@ -138,7 +138,7 @@ export const BackupRestoreControls: React.FC<BackupRestoreControlsProps> = ({
     setIsImporting(true);
     try {
       const res = await restoreFromJsonFile(file);
-      showStatus(`🎉 تم استعادة البيانات بنجاح: ${res.studentsCount} طالب، ${res.transactionsCount} معاملة مالية`, 'success');
+      showStatus(`تم استعادة البيانات بنجاح: ${res.studentsCount} طالب، ${res.transactionsCount} معاملة مالية`, 'success');
       if (onSuccess) onSuccess();
     } catch (err: any) {
       showStatus(err?.message || 'فشلت استعادة البيانات من الملف', 'error');

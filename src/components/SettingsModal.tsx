@@ -285,14 +285,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   return (
     <div className="fixed inset-0 bg-slate-900/80 dark:bg-slate-950/85 flex items-center justify-center z-[150] p-2 sm:p-4 md:p-6 backdrop-blur-md animate-in fade-in select-none">
       <div 
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col h-[88vh] max-h-[820px]"
+        className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl flex flex-col h-[88vh] max-h-[820px]"
         dir="rtl"
       >
         
         {/* ========================================================================= */}
         {/* TOP MODAL HEADER                                                          */}
         {/* ========================================================================= */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80 dark:border-slate-700/50 bg-slate-50/80 dark:bg-slate-900/40 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-slate-900 text-amber-400 dark:bg-slate-800 rounded-2xl border border-slate-700 shadow-xs">
               <Building2 size={20} />
@@ -330,7 +330,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             onClick={() => setActiveTab('basic')}
             className={`flex items-center gap-2 px-5 py-3 rounded-t-2xl font-bold text-xs transition-all border-t border-x cursor-pointer ${
               activeTab === 'basic'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 shadow-xs -mb-[1px] z-10'
+                ? 'bg-white dark:bg-slate-800/80 text-slate-900 dark:text-gray-100 border-slate-200 dark:border-slate-700/50 shadow-xs -mb-[1px] z-10'
                 : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:bg-white/50'
             }`}
           >
@@ -344,7 +344,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             onClick={() => setActiveTab('data')}
             className={`flex items-center gap-2 px-5 py-3 rounded-t-2xl font-bold text-xs transition-all border-t border-x cursor-pointer ${
               activeTab === 'data'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 shadow-xs -mb-[1px] z-10'
+                ? 'bg-white dark:bg-slate-800/80 text-slate-900 dark:text-gray-100 border-slate-200 dark:border-slate-700/50 shadow-xs -mb-[1px] z-10'
                 : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:bg-white/50'
             }`}
           >
@@ -359,7 +359,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             onClick={() => setActiveTab('system')}
             className={`flex items-center gap-2 px-5 py-3 rounded-t-2xl font-bold text-xs transition-all border-t border-x cursor-pointer ${
               activeTab === 'system'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 shadow-xs -mb-[1px] z-10'
+                ? 'bg-white dark:bg-slate-800/80 text-slate-900 dark:text-gray-100 border-slate-200 dark:border-slate-700/50 shadow-xs -mb-[1px] z-10'
                 : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:bg-white/50'
             }`}
           >
@@ -374,7 +374,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
         {/* ========================================================================= */}
         {/* MAIN BODY / TAB CONTENT                                                   */}
         {/* ========================================================================= */}
-        <div className="flex-1 bg-white dark:bg-slate-900 overflow-y-auto p-5 sm:p-7 space-y-6 custom-scrollbar">
+        <div className="flex-1 bg-white dark:bg-slate-900/40 overflow-y-auto p-5 sm:p-7 space-y-6 custom-scrollbar">
           
           {toastMessage && (
             <div className={`p-3.5 rounded-2xl text-xs font-bold flex items-center gap-2.5 transition-all border ${
@@ -483,7 +483,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                           value={logoUrlInput}
                           onChange={(e) => setLogoUrlInput(e.target.value)}
                           placeholder="https://example.com/logo.png"
-                          className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 dark:text-white outline-none focus:border-indigo-600 text-left"
+                          className="flex-1 bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600 text-left"
                           dir="ltr"
                         />
                         <button
@@ -519,7 +519,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       value={formData.schoolName}
                       onChange={(e) => setFormData({ ...formData, schoolName: e.target.value })}
                       placeholder="منظومة مسار"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600"
+                      className="w-full bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600"
                     />
                   </div>
 
@@ -532,7 +532,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       value={formData.schoolNameEn}
                       onChange={(e) => setFormData({ ...formData, schoolNameEn: e.target.value })}
                       placeholder="MASAR SYSTEM"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600 text-left"
+                      className="w-full bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600 text-left"
                       dir="ltr"
                     />
                   </div>
@@ -546,7 +546,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       value={formData.schoolType}
                       onChange={(e) => setFormData({ ...formData, schoolType: e.target.value })}
                       placeholder="للتعليم الخاص ورياض الأطفال"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600"
+                      className="w-full bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600"
                     />
                   </div>
 
@@ -559,7 +559,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="0910000000"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600 text-left"
+                      className="w-full bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600 text-left"
                       dir="ltr"
                     />
                   </div>
@@ -573,7 +573,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                       placeholder="طرابلس - ليبيا"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600"
+                      className="w-full bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600"
                     />
                   </div>
 
@@ -586,7 +586,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       value={formData.receiptFooterNotice}
                       onChange={(e) => setFormData({ ...formData, receiptFooterNotice: e.target.value })}
                       placeholder="نسعد بثقتكم.. منظومة مسار تتمنى لكم عاماً دراسياً موفقاً"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600"
+                      className="w-full bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-gray-100 outline-none focus:border-indigo-600"
                     />
                   </div>
                 </div>
@@ -643,7 +643,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 <button
                   type="button"
                   onClick={handleTriggerSync}
-                  className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+                  className="bg-white dark:bg-slate-800/60 text-slate-800 dark:text-gray-100 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                 >
                   <RefreshCw size={14} className={syncState.isSyncing ? 'animate-spin' : ''} />
                   <span>{syncState.isSyncing ? 'جاري الفحص...' : 'فحص ومزامنة فورية'}</span>
@@ -882,7 +882,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
       {/* ========================================================================= */}
       {showAddUserModal && (
         <div className="fixed inset-0 bg-slate-950/80 flex items-center justify-center z-[200] p-4 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md p-5 space-y-4 shadow-xl animate-in zoom-in-95">
+          <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-2xl w-full max-w-md p-5 space-y-4 shadow-xl animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <h4 className="font-black text-sm text-slate-900 dark:text-white">إضافة مستخدم جديد للمنظومة</h4>
               <button onClick={() => setShowAddUserModal(false)} className="text-slate-400 hover:text-slate-700">
@@ -966,7 +966,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
       {/* ========================================================================= */}
       {showAnnualInventoryModal && (
         <div className="fixed inset-0 bg-slate-950/85 flex items-center justify-center z-[220] p-4 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl p-6 space-y-5" dir="rtl">
+          <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-red-200 dark:border-red-900/60 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl p-6 space-y-5" dir="rtl">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 bg-red-600 text-white rounded-xl">

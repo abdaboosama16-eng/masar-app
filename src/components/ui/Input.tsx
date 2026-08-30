@@ -31,10 +31,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
-            className={`w-full text-xs sm:text-sm bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 border rounded-xl px-3.5 py-2.5 outline-none shadow-sm transition-all duration-200 ${
+            className={`w-full text-xs sm:text-sm bg-white dark:bg-slate-800/60 dark:text-gray-100 text-slate-900 placeholder:text-slate-400 dark:placeholder:text-slate-500 border rounded-xl px-3.5 py-2.5 outline-none shadow-sm transition-all duration-200 ${
               error
                 ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/30'
-                : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50'
+                : 'border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50'
             } ${rightIcon ? 'pr-10' : ''} ${leftIcon ? 'pl-10' : ''} ${className}`}
             {...props}
           />
@@ -81,10 +81,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           id={selectId}
-          className={`w-full text-xs sm:text-sm bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 border rounded-xl px-3.5 py-2.5 outline-none shadow-sm transition-all duration-200 ${
+          className={`w-full text-xs sm:text-sm bg-white dark:bg-slate-800/60 text-slate-900 dark:text-gray-100 border rounded-xl px-3.5 py-2.5 outline-none shadow-sm transition-all duration-200 ${
             error
               ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/30'
-              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50'
+              : 'border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50'
           } ${className}`}
           {...props}
         >
@@ -131,10 +131,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           ref={ref}
           id={textareaId}
-          className={`w-full text-xs sm:text-sm bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 border rounded-xl px-3.5 py-2.5 outline-none shadow-sm transition-all duration-200 resize-none ${
+          className={`w-full text-xs sm:text-sm bg-white dark:bg-slate-800/60 text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 border rounded-xl px-3.5 py-2.5 outline-none shadow-sm transition-all duration-200 resize-none ${
             error
               ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/30'
-              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50'
+              : 'border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50'
           } ${className}`}
           {...props}
         />

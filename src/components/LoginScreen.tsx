@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, Lock, UserCheck, KeyRound, AlertCircle, 
-  ArrowRight, School, User, Check, Eye, EyeOff, Sparkles, Building2, HelpCircle 
+  ArrowRight, School, User, Check, Eye, EyeOff, Building2, HelpCircle 
 } from 'lucide-react';
 import { authenticateUser } from '../lib/auth';
 import { LocalUser, useSchoolSettings } from '../lib/settings';
@@ -55,14 +55,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   return (
     <div 
-      className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-slate-100 flex items-center justify-center p-3 sm:p-6 select-none relative overflow-hidden font-sans"
+      className="min-h-screen w-full bg-dark-texture text-gray-100 flex items-center justify-center p-3 sm:p-6 select-none relative overflow-hidden font-sans"
       dir="rtl"
     >
       {/* Background Decorative Lighting */}
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-lg bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-lg bg-slate-800/60 backdrop-blur-md border border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Top Header */}
         <div className="bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 text-white p-6 text-center relative border-b border-indigo-800/40">
@@ -79,14 +79,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </div>
 
         {/* Login Body */}
-        <div className="p-6 sm:p-8 text-slate-800 dark:text-slate-200 space-y-5">
+        <div className="p-6 sm:p-8 text-gray-100 space-y-5">
           
           {/* User Role Selection Tabs */}
           <div>
-            <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-xs font-black text-gray-100 mb-2">
               اختر نوع الحساب / الصلاحية:
             </label>
-            <div className="grid grid-cols-2 gap-2.5 p-1 bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-200/70 dark:border-slate-800">
+            <div className="grid grid-cols-2 gap-2.5 p-1 bg-slate-950/50 rounded-2xl border border-slate-700/50">
               
               {/* Admin Tab */}
               <button
@@ -98,15 +98,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 }}
                 className={`flex flex-col items-center justify-center p-3 rounded-xl transition-all cursor-pointer text-center ${
                   selectedRole === 'admin'
-                    ? 'bg-white dark:bg-slate-900 text-indigo-950 dark:text-cyan-300 shadow-md border border-slate-200/80 dark:border-cyan-500/40 font-black'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-bold'
+                    ? 'bg-slate-800/80 text-cyan-300 shadow-md border border-cyan-500/40 font-black'
+                    : 'text-slate-400 hover:text-gray-100 font-bold'
                 }`}
               >
                 <div className="flex items-center gap-1.5 mb-1">
-                  <ShieldCheck size={16} className={selectedRole === 'admin' ? 'text-indigo-600 dark:text-cyan-400' : 'text-slate-400'} />
+                  <ShieldCheck size={16} className={selectedRole === 'admin' ? 'text-cyan-400' : 'text-slate-500'} />
                   <span className="text-xs">مدير النظام</span>
                 </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                <span className="text-[10px] text-slate-500">
                   صلاحيات كاملة + إعدادات
                 </span>
               </button>
@@ -121,15 +121,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 }}
                 className={`flex flex-col items-center justify-center p-3 rounded-xl transition-all cursor-pointer text-center ${
                   selectedRole === 'cashier'
-                    ? 'bg-white dark:bg-slate-900 text-indigo-950 dark:text-cyan-300 shadow-md border border-slate-200/80 dark:border-cyan-500/40 font-black'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-bold'
+                    ? 'bg-slate-800/80 text-cyan-300 shadow-md border border-cyan-500/40 font-black'
+                    : 'text-slate-400 hover:text-gray-100 font-bold'
                 }`}
               >
                 <div className="flex items-center gap-1.5 mb-1">
-                  <UserCheck size={16} className={selectedRole === 'cashier' ? 'text-indigo-600 dark:text-cyan-400' : 'text-slate-400'} />
+                  <UserCheck size={16} className={selectedRole === 'cashier' ? 'text-cyan-400' : 'text-slate-500'} />
                   <span className="text-xs">موظف تحصيل</span>
                 </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                <span className="text-[10px] text-slate-500">
                   تسجيل وإيصالات فقط
                 </span>
               </button>
@@ -141,7 +141,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             
             {/* Error Alert Message */}
             {errorMsg && (
-              <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/80 text-rose-900 dark:text-rose-200 text-xs font-bold flex items-start gap-2.5 animate-in shake">
+              <div className="p-3.5 rounded-2xl bg-rose-950/60 border border-rose-800/80 text-rose-200 text-xs font-bold flex items-start gap-2.5 animate-in shake">
                 <AlertCircle size={17} className="text-rose-600 shrink-0 mt-0.5" />
                 <p className="leading-relaxed flex-1">{errorMsg}</p>
               </div>
@@ -150,8 +150,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {/* Password Input Field */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-black text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Lock size={14} className="text-indigo-600 dark:text-cyan-400" />
+                <label className="text-xs font-black text-gray-100 flex items-center gap-1.5">
+                  <Lock size={14} className="text-cyan-400" />
                   <span>
                     {selectedRole === 'admin' ? 'كلمة مرور المدير *' : 'رمز مرور موظف التحصيل (PIN) *'}
                   </span>
@@ -161,7 +161,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => handleQuickFill(selectedRole === 'admin' ? 'admin123' : '0000')}
-                  className="text-[11px] text-indigo-600 dark:text-cyan-400 hover:underline font-bold"
+                  className="text-[11px] text-cyan-400 hover:underline font-bold"
                 >
                   الرمز الافتراضي ({selectedRole === 'admin' ? 'admin123' : '0000'})
                 </button>
@@ -178,7 +178,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                     if (errorMsg) setErrorMsg(null);
                   }}
                   placeholder={selectedRole === 'admin' ? 'أدخل كلمة مرور المدير (مثلاً: admin123)' : 'أدخل رمز المرور (مثلاً: 0000)'}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-black text-slate-900 dark:text-white outline-none focus:border-indigo-600 dark:focus:border-cyan-400 transition-all text-left shadow-inner pl-10"
+                  className="w-full bg-slate-950/60 border border-slate-700/50 rounded-xl px-4 py-3 text-sm font-black text-gray-100 outline-none focus:border-cyan-400 transition-all text-left shadow-inner pl-10"
                   dir="ltr"
                 />
                 
@@ -194,22 +194,21 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </div>
 
             {/* Role Permissions Summary Box */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200/60 dark:border-slate-800/80 text-[11px] space-y-1">
-              <div className="font-black text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Sparkles size={12} className="text-amber-500" />
+            <div className="p-3 bg-slate-950/50 rounded-xl border border-slate-700/50 text-[11px] space-y-1">
+              <div className="font-black text-gray-100 flex items-center gap-1.5">
                 <span>الصلاحيات المتاحة لهذا الحساب:</span>
               </div>
               {selectedRole === 'admin' ? (
-                <ul className="list-disc list-inside text-slate-500 dark:text-slate-400 space-y-0.5 pr-1">
+                <ul className="list-disc list-inside text-slate-400 space-y-0.5 pr-1">
                   <li>الوصول الكامل لكافة الإعدادات وتعديل هوية المدرسة.</li>
                   <li>تعديل الرسوم الدراسية وأقساط الطلاب.</li>
                   <li>حذف السجلات، إدارة المستخدمين والنسخ الاحتياطي.</li>
                 </ul>
               ) : (
-                <ul className="list-disc list-inside text-slate-500 dark:text-slate-400 space-y-0.5 pr-1">
+                <ul className="list-disc list-inside text-slate-400 space-y-0.5 pr-1">
                   <li>تسجيل بيانات الطلاب الجدد وتحصيل الأقساط.</li>
                   <li>طباعة وتصدير إيصالات القبض والتقارير المالية اليومية.</li>
-                  <li className="text-amber-600 dark:text-amber-400 font-bold">يتم إخفاء زر الإعدادات ومنع إجراءات الحذف لحماية البيانات.</li>
+                  <li className="text-amber-400 font-bold">يتم إخفاء زر الإعدادات ومنع إجراءات الحذف لحماية البيانات.</li>
                 </ul>
               )}
             </div>
@@ -232,7 +231,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </form>
 
           {/* Footer Assistance */}
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="pt-2 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400">
             <span>نسيت كلمة المرور؟</span>
             <a
               href="https://wa.me/218927211505?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%20%D9%85%D9%87%D9%86%D8%AF%D8%B3%D8%8C%20%D9%86%D8%B3%D9%8A%D8%AA%20%D9%83%D9%84%D9%85%D8%A9%20%D9%85%D8%B1%D9%88%D8%B1%20%D8%A7%D9%84%D8%AF%D8%AE%D9%88%D9%84%20%D9%84%D9%85%D9%86%D8%B8%D9%88%D9%85%D8%A9%20%D9%85%D8%B3%D8%A7%D8%B1"

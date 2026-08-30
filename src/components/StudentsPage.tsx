@@ -248,7 +248,7 @@ export default function StudentsPage() {
       {/* Header & Main Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-gray-100 tracking-tight">
             إدارة الطلاب والأقساط
           </h1>
         </div>
@@ -307,25 +307,25 @@ export default function StudentsPage() {
       {/* Search & Sort Actions Bar */}
       <div className="flex flex-col sm:flex-row items-center gap-3">
         {/* Search Input */}
-        <div className="flex-1 w-full bg-white dark:bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-3 shadow-sm transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
+        <div className="flex-1 w-full bg-white dark:bg-slate-800/60 backdrop-blur-md px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/50 flex items-center gap-3 shadow-sm transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
           <Search size={18} className="text-slate-400 dark:text-slate-500 shrink-0" />
           <input 
             type="text" 
             placeholder="ابحث بالاسم أو الرقم الوطني أو الهاتف..."
-            className="bg-transparent border-none outline-none w-full text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 font-bold text-xs sm:text-sm"
+            className="bg-transparent border-none outline-none w-full text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 font-bold text-xs sm:text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         {/* Sort Dropdown Selector */}
-        <div className="w-full sm:w-auto bg-white dark:bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-2 shadow-sm shrink-0 transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
+        <div className="w-full sm:w-auto bg-white dark:bg-slate-800/60 backdrop-blur-md px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/50 flex items-center gap-2 shadow-sm shrink-0 transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
           <ArrowUpDown size={16} className="text-slate-500 dark:text-slate-400 shrink-0" />
           <span className="text-xs text-slate-500 dark:text-slate-400 font-bold whitespace-nowrap hidden md:inline">ترتيب:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'latest' | 'name_asc' | 'name_desc')}
-            className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-bold text-xs sm:text-sm cursor-pointer"
+            className="bg-transparent border-none outline-none text-slate-900 dark:text-gray-100 font-bold text-xs sm:text-sm cursor-pointer"
           >
             <option value="name_asc" className="dark:bg-slate-900">الترتيب الأبجدي (أ - ي)</option>
             <option value="name_desc" className="dark:bg-slate-900">الترتيب الأبجدي (ي - أ)</option>
@@ -335,10 +335,10 @@ export default function StudentsPage() {
       </div>
 
       {/* Students DataGrid Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-start whitespace-nowrap border-collapse">
-            <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+            <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-gray-100 text-xs font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-700/50">
               <tr>
                 <th className="py-3 px-4 font-bold text-center w-12">م</th>
                 <th className="py-3 px-4 font-bold text-start">اسم الطالب</th>
@@ -413,7 +413,7 @@ export default function StudentsPage() {
                         isSelected 
                           ? 'bg-blue-50/90 dark:bg-blue-950/40 border-r-4 border-blue-600' 
                           : isEven 
-                            ? 'bg-white dark:bg-slate-900 hover:bg-indigo-50/40 dark:hover:bg-slate-800/60' 
+                            ? 'bg-white dark:bg-slate-800/40 hover:bg-indigo-50/40 dark:hover:bg-slate-700/40' 
                             : 'bg-gray-50/50 dark:bg-slate-900/50 hover:bg-indigo-50/40 dark:hover:bg-slate-800/60'
                       }`}
                     >
@@ -1247,17 +1247,17 @@ function StudentFormModal({
 
               {/* Transportation Service Section */}
               <div className="md:col-span-2 pt-2">
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 transition-all duration-200">
+                <div className="bg-slate-50 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 transition-all duration-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg transition-colors ${formData.hasTransport ? 'bg-amber-100 text-amber-700' : 'bg-slate-200 text-slate-500'}`}>
+                      <div className={`p-2 rounded-lg transition-colors ${formData.hasTransport ? 'bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-gray-300'}`}>
                         <BusFront size={18} />
                       </div>
                       <div>
-                        <span className="font-bold text-xs text-slate-800 block">
+                        <span className="font-bold text-xs text-slate-800 dark:text-gray-100 block">
                           اشتراك المواصلات
                         </span>
-                        <span className="text-[11px] text-slate-500 font-medium">
+                        <span className="text-[11px] text-slate-500 dark:text-gray-300 font-medium">
                           تفعيل خدمة حافلة النقل المدرسي للطالب
                         </span>
                       </div>
@@ -1273,7 +1273,7 @@ function StudentFormModal({
                         transportLandmark: !prev.hasTransport ? prev.transportLandmark : '' 
                       }))}
                       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        formData.hasTransport ? 'bg-amber-500' : 'bg-slate-300'
+                        formData.hasTransport ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-600'
                       }`}
                     >
                       <span
@@ -1285,7 +1285,7 @@ function StudentFormModal({
                   </div>
 
                   {formData.hasTransport && (
-                    <div className="mt-4 pt-3.5 border-t border-slate-200 animate-in fade-in duration-200">
+                    <div className="mt-4 pt-3.5 border-t border-slate-200 dark:border-slate-700/50 animate-in fade-in duration-200">
                       <Input
                         type="text"
                         required={formData.hasTransport}

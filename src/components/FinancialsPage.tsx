@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { ArrowDownRight, ArrowUpRight, Plus, TrendingUp, BarChart3, LineChart as LineChartIcon, ShieldCheck, Landmark, Calendar, Filter, Sparkles, Clock, CheckCircle2 } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Plus, TrendingUp, BarChart3, LineChart as LineChartIcon, Landmark, Calendar, Filter, Clock, CheckCircle2 } from 'lucide-react';
 import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { Transaction } from '../types';
 import { AutoAuditor } from './AutoAuditor';
@@ -172,10 +172,10 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
       {/* Top Header & Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-gray-100 tracking-tight">
             الصادرات والواردات (الخزينة)
           </h1>
-          <p className="text-xs text-slate-500 mt-1 font-medium">
+          <p className="text-xs text-slate-500 dark:text-gray-300 mt-1 font-medium">
             سجل العمليات المالية والمقبوضات والمصروفات المعتمدة
           </p>
         </div>
@@ -197,27 +197,27 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
         {/* Left Column (2/3 width): Summary & Chart */}
         <div className="lg:col-span-2 space-y-6">
           {/* Financial Summary Cards */}
-          <div className="bg-white border border-slate-200 rounded-[20px] p-7 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm">
+          <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-[20px] p-7 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm">
         <div className="text-center lg:text-start">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">صافي رصيد الخزينة المعروض</p>
+          <p className="text-slate-500 dark:text-gray-300 text-xs font-bold uppercase tracking-wider mb-1">صافي رصيد الخزينة المعروض</p>
           <p className={`text-4xl sm:text-5xl font-extrabold flex items-center justify-center lg:justify-start ${balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
             <span dir="ltr">{balance.toLocaleString()} <span className="text-xl font-bold">د.ل</span></span>
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full lg:w-auto text-center sm:text-start items-center justify-center">
-          <div className="bg-green-50 p-5 rounded-[20px] w-full sm:w-auto flex flex-col items-center sm:items-start border border-green-100 min-w-[170px] shadow-sm transition-transform hover:scale-[1.02]">
-            <p className="text-green-800 mb-2 flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider">
-              <ArrowUpRight size={16} className="text-green-600" /> إجمالي الوارد
+          <div className="bg-green-50 dark:bg-emerald-950/40 p-5 rounded-[20px] w-full sm:w-auto flex flex-col items-center sm:items-start border border-green-100 dark:border-emerald-800/50 min-w-[170px] shadow-sm transition-transform hover:scale-[1.02]">
+            <p className="text-green-800 dark:text-emerald-300 mb-2 flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider">
+              <ArrowUpRight size={16} className="text-green-600 dark:text-emerald-400" /> إجمالي الوارد
             </p>
-            <p className="text-2xl font-extrabold text-green-900 tracking-tight">
+            <p className="text-2xl font-extrabold text-green-900 dark:text-emerald-200 tracking-tight">
               <span dir="ltr">+{totalIn.toLocaleString()} <span className="text-sm font-bold text-green-600/70">د.ل</span></span>
             </p>
           </div>
-          <div className="bg-red-50 p-5 rounded-[20px] w-full sm:w-auto flex flex-col items-center sm:items-start border border-red-100 min-w-[170px] shadow-sm transition-transform hover:scale-[1.02]">
-            <p className="text-red-800 mb-2 flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider">
-              <ArrowDownRight size={16} className="text-red-600" /> إجمالي الصادر
+          <div className="bg-red-50 dark:bg-rose-950/40 p-5 rounded-[20px] w-full sm:w-auto flex flex-col items-center sm:items-start border border-red-100 dark:border-rose-800/50 min-w-[170px] shadow-sm transition-transform hover:scale-[1.02]">
+            <p className="text-red-800 dark:text-rose-300 mb-2 flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider">
+              <ArrowDownRight size={16} className="text-red-600 dark:text-rose-400" /> إجمالي الصادر
             </p>
-            <p className="text-2xl font-extrabold text-red-900 tracking-tight">
+            <p className="text-2xl font-extrabold text-red-900 dark:text-rose-200 tracking-tight">
               <span dir="ltr">-{totalOut.toLocaleString()} <span className="text-sm font-bold text-red-600/70">د.ل</span></span>
             </p>
           </div>
@@ -225,29 +225,29 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
       </div>
 
       {/* Recharts Graphical Analysis */}
-      <div className="bg-white border border-slate-200 rounded-[20px] p-6 md:p-7 space-y-4 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-[20px] p-6 md:p-7 space-y-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700/50 pb-4">
           <div>
-            <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-              <TrendingUp className="text-blue-600" size={20} />
+            <h2 className="text-base font-extrabold text-slate-900 dark:text-gray-100 flex items-center gap-2">
+              <TrendingUp className="text-blue-600 dark:text-blue-400" size={20} />
               <span>إجمالي الواردات والمصروفات الشهرية</span>
             </h2>
-            <p className="text-xs text-slate-500 mt-1 font-medium">
+            <p className="text-xs text-slate-500 dark:text-gray-300 mt-1 font-medium">
               مخطط بياني لتوزيع حركة التحصيل المالي والمصروفات الشهرية
             </p>
           </div>
 
-          <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-2xl border border-slate-200 self-start sm:self-auto">
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-900/40 p-1 rounded-2xl border border-slate-200 dark:border-slate-700/50 self-start sm:self-auto">
             <button
               onClick={() => setChartType('bar')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${chartType === 'bar' ? 'bg-white text-blue-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${chartType === 'bar' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-200 dark:border-slate-700/50' : 'text-slate-500 dark:text-gray-300 hover:text-slate-800 dark:hover:text-gray-100'}`}
             >
               <BarChart3 size={14} />
               <span>أعمدة</span>
             </button>
             <button
               onClick={() => setChartType('area')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${chartType === 'area' ? 'bg-white text-blue-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${chartType === 'area' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-200 dark:border-slate-700/50' : 'text-slate-500 dark:text-gray-300 hover:text-slate-800 dark:hover:text-gray-100'}`}
             >
               <LineChartIcon size={14} />
               <span>مساحي</span>
@@ -302,28 +302,28 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
       </div>
       
       {/* Movement Type Filter Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-[20px] border border-slate-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-800/60 backdrop-blur-md p-4 rounded-[20px] border border-slate-200 dark:border-slate-700/50 shadow-sm">
         <div className="flex items-center gap-2 px-2">
           <Filter size={16} className="text-slate-400" />
-          <span className="text-sm font-bold text-slate-700">تصنيف العرض:</span>
+          <span className="text-sm font-bold text-slate-700 dark:text-gray-100">تصنيف العرض:</span>
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setTypeFilter('ALL')}
-            className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${typeFilter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+            className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${typeFilter === 'ALL' ? 'bg-slate-800 text-white shadow-md' : 'bg-slate-50 dark:bg-slate-900/40 text-slate-600 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50'}`}
           >
             جميع الحركات ({yearFilteredTransactions.length})
           </button>
           <button
             onClick={() => setTypeFilter('BASIC')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${typeFilter === 'BASIC' ? 'bg-indigo-600 text-white shadow-md' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'}`}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${typeFilter === 'BASIC' ? 'bg-indigo-600 text-white shadow-md' : 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 border border-indigo-200 dark:border-indigo-800/50'}`}
           >
             <Landmark size={14} />
             <span>حركة أساسية (رأس مال / أرصدة ثابتة)</span>
           </button>
           <button
             onClick={() => setTypeFilter('DAILY')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${typeFilter === 'DAILY' ? 'bg-green-600 text-white shadow-md' : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200'}`}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${typeFilter === 'DAILY' ? 'bg-green-600 text-white shadow-md' : 'bg-green-50 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-300 hover:bg-green-100 dark:hover:bg-emerald-900/40 border border-green-200 dark:border-emerald-800/50'}`}
           >
             <Calendar size={14} />
             <span>حركة يومية ({activeYear})</span>
@@ -332,7 +332,7 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
       </div>
 
       {/* Transactions Data Table */}
-      <div className="bg-white border border-slate-200 rounded-[20px] overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-[20px] overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-start border-collapse">
             <thead>
@@ -375,11 +375,11 @@ export default function FinancialsPage({ currentAcademicYear: propAcademicYear }
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <div className="bg-blue-50 rounded-full p-6 mb-3">
-                        <Landmark className="h-16 w-16 text-blue-300" />
+                      <div className="bg-blue-50 dark:bg-slate-800/80 rounded-full p-6 mb-3">
+                        <Landmark className="h-16 w-16 text-blue-300 dark:text-slate-500" />
                       </div>
-                      <p className="font-extrabold text-slate-800 text-sm mb-1">لا توجد حركات مسجلة مطابقة للفلتر المحدد</p>
-                      <p className="text-xs text-slate-400">يمكنك إضافة حركة جديدة أو تغيير فلتر التصنيف بالأعلى.</p>
+                      <p className="font-extrabold text-slate-800 dark:text-gray-100 text-sm mb-1">لا توجد حركات مسجلة مطابقة للفلتر المحدد</p>
+                      <p className="text-xs text-slate-400 dark:text-gray-300">يمكنك إضافة حركة جديدة أو تغيير فلتر التصنيف بالأعلى.</p>
                     </div>
                   </td>
                 </tr>

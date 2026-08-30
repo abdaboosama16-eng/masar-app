@@ -51,7 +51,7 @@ export default function TeachersPage() {
           {settings.subscriptionPlan === 'enterprise' && (
             <button 
               onClick={() => alert("سيتم تفعيل ميزة الحضور اللامرئي الذكي قريباً...")}
-              className="bg-white hover:bg-indigo-50 border border-indigo-200 text-indigo-700 active:scale-[0.98] px-5 py-3 rounded-2xl flex items-center gap-2.5 transition-all font-bold text-xs shadow-sm"
+              className="bg-white hover:bg-indigo-50 dark:bg-slate-800/60 dark:hover:bg-slate-700/70 backdrop-blur-md border border-indigo-200 dark:border-slate-700/50 text-indigo-700 dark:text-indigo-300 active:scale-[0.98] px-5 py-3 rounded-2xl flex items-center gap-2.5 transition-all font-bold text-xs shadow-sm"
             >
               <Fingerprint size={18} className="text-indigo-500" />
               <span>الحضور اللامرئي</span>
@@ -71,7 +71,7 @@ export default function TeachersPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm animate-pulse flex flex-col justify-between h-48">
+            <div key={i} className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-100 dark:border-slate-700/50 rounded-3xl p-6 shadow-sm animate-pulse flex flex-col justify-between h-48">
               <div>
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
@@ -94,7 +94,7 @@ export default function TeachersPage() {
         </div>
       ) : safeTeachers.length === 0 ? (
         /* Artistic Empty State with strictly inanimate educational icon & cosmic glow */
-        <div className="bg-white dark:bg-slate-900/80 dark:backdrop-blur-md border border-slate-100 dark:border-slate-800 rounded-3xl p-12 text-center flex flex-col items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_25px_rgba(0,0,0,0.3)] my-6">
+        <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-100 dark:border-slate-700/50 rounded-3xl p-12 text-center flex flex-col items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_25px_rgba(0,0,0,0.3)] my-6">
           <div className="relative mb-5 flex items-center justify-center">
             <div className="absolute w-32 h-32 rounded-full border border-dashed border-cyan-500/30 animate-[spin_20s_linear_infinite]"></div>
             <div className="w-20 h-20 rounded-3xl bg-blue-50 dark:bg-slate-800 border border-blue-100 dark:border-slate-700 flex items-center justify-center dark:shadow-[0_0_20px_rgba(34,211,238,0.2)]">
@@ -118,7 +118,7 @@ export default function TeachersPage() {
           {safeTeachers.map(teacher => (
             <div 
               key={teacher.id} 
-              className="bg-white dark:bg-slate-900/80 dark:backdrop-blur-md border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.07)] dark:shadow-[0_0_20px_rgba(0,0,0,0.3)] dark:hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between"
+              className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-100 dark:border-slate-700/50 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.07)] dark:shadow-[0_0_20px_rgba(0,0,0,0.3)] dark:hover:border-cyan-500/30 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 <div className="flex justify-between items-start mb-4">
@@ -192,7 +192,7 @@ function AddTeacherModal({ onClose, onAdded }: { onClose: () => void, onAdded: (
 
   return (
     <div className="fixed inset-0 bg-slate-950/60 dark:bg-slate-950/80 flex items-center justify-center z-50 p-4 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-900 dark:backdrop-blur-xl border border-slate-100 dark:border-slate-800 rounded-3xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_0_30px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-100 dark:border-slate-700/50 rounded-3xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_0_30px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-200">
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/70 dark:bg-slate-800/50">
           <div>
             <h2 className="font-extrabold text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -322,7 +322,7 @@ function SalaryModal({ teacher, onClose, onPaid }: { teacher: Teacher, onClose: 
 
   return (
     <div className="fixed inset-0 bg-slate-950/60 dark:bg-slate-950/80 flex items-center justify-center z-50 p-4 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-900 dark:backdrop-blur-xl border border-slate-100 dark:border-slate-800 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_0_30px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-100 dark:border-slate-700/50 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_0_30px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-200">
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/70 dark:bg-slate-800/50">
           <div>
             <h2 className="font-extrabold text-base text-slate-900 dark:text-slate-100">صرف راتب: {teacher.name}</h2>

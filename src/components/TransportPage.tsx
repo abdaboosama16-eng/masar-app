@@ -173,7 +173,7 @@ export default function TransportPage() {
     <div className="space-y-6 max-w-7xl mx-auto pb-12 font-sans">
       
       {/* 1. Header & Quick Actions (Screen only) */}
-      <div className="print:hidden flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800/80 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+      <div className="print:hidden flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800/60 backdrop-blur-md p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/50 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200/60 shadow-sm">
             <BusFront size={26} />
@@ -196,7 +196,7 @@ export default function TransportPage() {
             type="button"
             onClick={handleExportCSV}
             disabled={filteredStudents.length === 0}
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/70 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm active:scale-95 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800/60 hover:bg-slate-50 dark:hover:bg-slate-700/70 text-slate-700 dark:text-gray-100 text-xs font-bold transition-all shadow-sm active:scale-95 disabled:opacity-50"
             title="تصدير كشف إكسل"
           >
             <FileSpreadsheet size={15} className="text-emerald-600 dark:text-emerald-400" />
@@ -279,7 +279,7 @@ export default function TransportPage() {
       </div>
 
       {/* 3. Search, Filter & View Controls (Screen only) */}
-      <div className="print:hidden flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+      <div className="print:hidden flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white dark:bg-slate-800/60 backdrop-blur-md p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700/50 shadow-sm">
         <div className="relative flex-1">
           <Search size={17} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -387,7 +387,7 @@ export default function TransportPage() {
       </div>
 
       {/* 4. Transport Students Table (Screen View) */}
-      <div className="print:hidden bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm overflow-hidden">
+      <div className="print:hidden bg-white dark:bg-slate-800/60 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-slate-700/50 shadow-sm overflow-hidden">
         {filteredStudents.length === 0 ? (
           <div className="py-16 text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-500 mx-auto flex items-center justify-center mb-4 border border-amber-200/60">

@@ -69,14 +69,14 @@ export function Modal({
       {/* Modal Dialog Content: 200ms Smooth Fade-in & Scale-in */}
       <div
         ref={modalRef}
-        className={`relative w-full ${maxWidthMap[maxWidth]} bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-white/10 rounded-2xl shadow-xl z-10 overflow-hidden transform transition-all duration-200 ease-out animate-in fade-in zoom-in-95 ${className}`}
+        className={`relative w-full ${maxWidthMap[maxWidth]} bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/90 dark:border-slate-700/50 rounded-2xl shadow-xl z-10 overflow-hidden transform transition-all duration-200 ease-out animate-in fade-in zoom-in-95 ${className}`}
         dir="rtl"
       >
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-900/30">
             <div>
               {typeof title === 'string' ? (
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">{title}</h3>
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-gray-100">{title}</h3>
               ) : (
                 title
               )}
